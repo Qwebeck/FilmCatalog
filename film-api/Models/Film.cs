@@ -12,22 +12,20 @@ namespace FilmApi.Models
         public long FilmID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        
+        public string Genre { get; set; }
         public string? Director { get; set; } 
         public byte[]?  Image { get; set; }
         public long UserID { get; set; }
-        private User? _reviewAuthor;
-        public virtual User ReviewAuthor 
-        { 
-            get => _reviewAuthor ?? throw new InvalidOperationException("Uninitialized property: " + nameof(ReviewAuthor));
-            set => _reviewAuthor = value;
-        }
+
+        public virtual User? ReviewAuthor { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
-        public Film(long filmID, string title, string description, long userID)
+        public Film( string title, string description, long userID, string genre)
         {
-            FilmID = filmID;
             Title = title;
             Description = description;
             UserID = userID;
+            Genre = genre;
         }
     }
 }

@@ -74,6 +74,13 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
+        [HttpGet("id/review")]
+        public async Task<ActionResult<Film>> GetUserReviews(long id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            return NotFound();
+        }
+
         // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

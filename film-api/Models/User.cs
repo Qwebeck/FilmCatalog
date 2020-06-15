@@ -21,8 +21,8 @@ namespace FilmApi.Models
         public virtual ICollection<Comment>? Comments { get; set; }
         public virtual ICollection<Film>? AuthoredReviews { get; set; }
 
-        public User(long userID, string username, string email, string password, Roles role)
-            => (UserID, Username, Email, Password, Role) = (userID, username, email, password, role);
+        public User( string username, string email, string password, Roles role)
+            => ( Username, Email, Password, Role) = ( username, email, password, role);
 
     }
 }

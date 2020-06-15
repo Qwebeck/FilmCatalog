@@ -10,17 +10,7 @@ namespace FilmApi.Models
         public float MarkValue { get; set; }
         public long? UserID { get; set; }
         public long FilmID { get; set; }
-        private Film? _markedFilm;
-        public virtual Film MarkedFilm 
-        { 
-            get => _markedFilm ?? throw new InvalidOperationException("Uninitialized property: " + nameof(MarkedFilm));
-            set => _markedFilm = value;
-        }
-        private User? _author;
-        public virtual User Author 
-        { 
-            get => _author ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Author));
-            set => _author = Author;
-        }
+        public virtual Film MarkedFilm { get; set; }
+        public virtual User Author { get; set; }
     }
 }

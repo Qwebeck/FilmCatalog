@@ -25,6 +25,11 @@ namespace FilmApi.DAL
                 .WithOne()
                 .HasForeignKey("PreviousCommentID");
 
+            modelBuilder
+                .Entity<Comment>()
+                .Property(c => c.PublicationDate)
+                .HasDefaultValueSql("getdate()");
+
             var converter = new EnumToStringConverter<Roles>();
             modelBuilder
                 .Entity<User>()
