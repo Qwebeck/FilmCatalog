@@ -23,23 +23,22 @@ namespace FilmApi.Controllers
 
         // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Select( c => new CommentDTO(c)).ToListAsync();
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(long id)
+        public async Task<ActionResult<CommentDTO>> GetComment(long id)
         {
             var comment = await _context.Comments.FindAsync(id);
-
             if (comment == null)
             {
                 return NotFound();
             }
 
-            return comment;
+            return new CommentDTO(comment);
         }
 
         // PUT: api/Comments/5
@@ -80,6 +79,11 @@ namespace FilmApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
+            // TODO Change it to authentication, so user that is not logged in, 
+            // will never get here
+            if (comment.UserID == null)
+                return BadRequest();
+
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
@@ -88,7 +92,7 @@ namespace FilmApi.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Comment>> DeleteComment(long id)
+        public async Task<ActionResult<CommentDTO>> DeleteComment(long id)
         {
             var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
@@ -99,7 +103,7 @@ namespace FilmApi.Controllers
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return comment;
+            return new CommentDTO(comment);
         }
 
         private bool CommentExists(long id)

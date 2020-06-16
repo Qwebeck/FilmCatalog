@@ -13,18 +13,15 @@ namespace FilmApi.DAL
         public DbSet<Mark> Marks { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder options)
-        //    => options.UseSqlite("Data Source=blogging.db");
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("FilmApi");
-            modelBuilder
-                .Entity<Comment>()
-                .HasMany(c => c.NextComments)
-                .WithOne()
-                .HasForeignKey("PreviousCommentID");
-
+            //modelBuilder
+            //    .Entity<Comment>()
+            //    .HasMany(c => c.NextComments)
+            //    .WithOne()
+            //    .HasForeignKey("PreviousCommentID");
+            
             modelBuilder
                 .Entity<Comment>()
                 .Property(c => c.PublicationDate)

@@ -13,29 +13,24 @@ namespace FilmApi
     {
         public static void Main(string[] args)
         {
-            Debug.WriteLine("First message");
             var host = CreateHostBuilder(args).Build();
             CreateDbIfNotExists(host);
             host.Run();
-            Debug.WriteLine("Here");
         }
         private static void CreateDbIfNotExists(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                Debug.WriteLine("Everything is starting");
                 try
                 {
                     var context = services.GetRequiredService<Context>();
                     DBInitializer.Initialize(context);
-                    Debug.WriteLine("All is cool");
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred creating the DB.");
-                    Debug.WriteLine("Exception");
                 }
             }
         }

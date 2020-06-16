@@ -12,18 +12,34 @@ namespace FilmApi.Models
         public DateTime PublicationDate { get; set; }
         public long? UserID { get; set; }
         public long FilmID { get; set; }
-        public long? PreviousCommentID { get; set; }
+      //  public long? PreviousCommentID { get; set; }
 
         public virtual User Author { get; set; }
         public virtual Film CommentedFilm { get; set; }
-        public virtual ICollection<Comment>? NextComments { get; set; }
+       // public virtual ICollection<Comment>? NextComments { get; set; }
 
-        public Comment( string content, long? userID, long filmID, long? previousCommentID = null)
+        public Comment( string content, long userID, long filmID )
         {
             Content = content;
             UserID = userID;
             FilmID = filmID;
-            PreviousCommentID = previousCommentID;
-        }            
+            //PreviousCommentID = previousCommentID;
+        }
+        public Comment () { }
+    }
+
+    public class CommentDTO 
+    {
+        public long CommentID { get; set; }
+        public string Author { get; private set; }
+        public string Content { get; private set; }
+        public DateTime PublicationDate { get; private set; }
+        public CommentDTO(Comment c)
+        {
+            CommentID = c.CommentID;
+            Author = c.Author.Username;
+            Content = c.Content;
+            PublicationDate = c.PublicationDate;
+        }
     }
 }

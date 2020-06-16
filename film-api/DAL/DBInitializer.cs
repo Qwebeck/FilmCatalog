@@ -46,7 +46,7 @@ namespace FIlmApi.DAL
             var comments = new Comment[]
             {
                 new Comment ( "My first comment", 1, 1),
-                new Comment ( "Sub sample comment", 1, 1, 1)
+                new Comment ( "Sub sample comment", 1, 1)
             };
             context.Comments.AddRange(comments);
             context.SaveChanges();

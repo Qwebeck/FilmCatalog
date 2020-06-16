@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
+using Okta.AspNetCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 namespace FilmApi
 {
     public class Startup
@@ -20,7 +22,22 @@ namespace FilmApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
-                   options.UseSqlServer(Configuration.GetConnectionString("Context")));
+                   options
+                   .UseLazyLoadingProxies()
+                   .UseSqlServer(Configuration.GetConnectionString("Context")));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+            })
+            .AddOktaWebApi(new OktaWebApiOptions()
+            {
+                OktaDomain = Configuration["Okta:OktaDomain"],
+            });
+
+            services.AddAuthorization();
 
             services.AddControllers();
         }
@@ -36,6 +53,8 @@ namespace FilmApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
