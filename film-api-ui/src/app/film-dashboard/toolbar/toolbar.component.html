@@ -1,0 +1,26 @@
+<div class="tools">
+    <h2> Film title </h2>
+    <mat-form-field class="search-params">
+        <mat-label>Film title</mat-label>
+        <input matInput type="text" [(ngModel)]="filmName">
+        <button mat-button *ngIf="filmName" matSuffix mat-icon-button aria-label="Clear" (click)="filmName=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    <h2> Film director </h2>
+    <mat-form-field class="search-params">
+        <mat-label>Film director</mat-label>
+        <input matInput type="text" [(ngModel)]="filmDirector">
+        <button mat-button *ngIf="filmDirector" matSuffix mat-icon-button aria-label="Clear" (click)="filmDirector=''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <h2> Genres </h2>
+    <mat-form-field>
+        <mat-label>Film Genres</mat-label>
+        <mat-select multiple>
+          <mat-option *ngFor="let genre of filmGenres" [value]="genre">{{genre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+</div>

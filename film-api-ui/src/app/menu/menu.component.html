@@ -1,0 +1,6 @@
+<mat-toolbar color="primary" class="menu">
+    <span>Film catalog</span>
+    <p class="placeholder"></p>
+    <!-- <button class="action-btn" mat-stroked-button *ngFor="let action of actions">{{ action.name }}</button> -->
+    <button class="action-btn" mat-stroked-button (click)="onAuthorizedClick()"> {{ isAuthorized ? "Log out" : "Log in"}} </button>
+</mat-toolbar>

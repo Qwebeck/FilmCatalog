@@ -1,0 +1,36 @@
+
+<mat-drawer-container  [autosize]="false">
+    <mat-drawer mode="side" opened>
+      <app-toolbar></app-toolbar>
+    </mat-drawer>
+    <mat-drawer-content>
+    <div class="grid-container">
+      <h1 class="mat-h1">Film collection</h1>
+      <mat-grid-list cols="3" rowHeight="350px">
+        <mat-grid-tile *ngFor="let card of cards | async" [colspan]=card.cols [rowspan]=card.rows>
+          <mat-card class="dashboard-card">
+            <mat-card-header>
+              <mat-card-title>
+                {{card.title}}
+                <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <a routerLink="/films/{{card.id}}"><button mat-menu-item>Expand</button></a>
+                  <button mat-menu-item *ngIf="userAuthorized" (click)="removeFilm(card.id)">Remove</button>
+                </mat-menu>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="dashboard-card-content">
+              <div class="image">Film image</div>
+              <div>{{ card.reviewAuthor }}</div>
+            </mat-card-content>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </mat-drawer-content>
+
+</mat-drawer-container>
+  
+

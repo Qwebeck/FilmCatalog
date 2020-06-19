@@ -1,0 +1,22 @@
+.placeholder {
+    flex: 1 1 auto;
+  }
+
+.menu { 
+    margin: 0%;
+    height: auto;
+    background-color: indigo; 
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    * {
+        vertical-align: middle; 
+        padding: 5px 20px 5px 20px;
+        min-width: 5%; 
+    }
+    .action-btn {
+        border-left: 2px solid rgba(245, 245, 245, 0.808);
+    }
+}
+
