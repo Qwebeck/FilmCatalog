@@ -1,7 +1,9 @@
 export interface Film {
-    id: number,
+    filmID: number,
     title: string,
-    reviewAuthor: string,
+    addedBy: string,
     description: string,
+    genre: string,
     director?: string,
+    image?: string | ArrayBuffer;
 }

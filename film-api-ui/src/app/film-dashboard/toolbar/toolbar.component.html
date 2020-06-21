@@ -19,7 +19,7 @@
     <mat-form-field>
         <mat-label>Film Genres</mat-label>
         <mat-select multiple>
-          <mat-option *ngFor="let genre of filmGenres" [value]="genre">{{genre}}</mat-option>
+          <!-- <mat-option *ngFor="let genre of filmGenres | async" [value]="genre">{{genre}}</mat-option> -->
         </mat-select>
       </mat-form-field>
       

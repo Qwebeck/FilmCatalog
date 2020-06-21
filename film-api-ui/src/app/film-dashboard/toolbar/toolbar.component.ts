@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FilmService } from '../../film.service';
+// import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-toolbar',
@@ -8,13 +10,19 @@ import { Component, OnInit } from '@angular/core';
 export class ToolbarComponent implements OnInit {
   filmName: string;
   filmDirector: string;
-  filmGenres: string[] = [
-    "action", "comedy"
-  ];
+  filmGenres;
 
-  constructor() { }
+  constructor(private filmService: FilmService) { }
 
   ngOnInit(): void {
+    this.getGenres()
   }
+
+  getGenres(): void {
+    this.filmService.getFilms().subscribe(
+      ( films ) => this.filmGenres = films.map( f => f.genre )
+    );
+  }
+
 
 }

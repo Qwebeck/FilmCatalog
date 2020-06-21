@@ -16,14 +16,16 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before">
-                  <a routerLink="/films/{{card.id}}"><button mat-menu-item>Expand</button></a>
-                  <button mat-menu-item *ngIf="userAuthorized" (click)="removeFilm(card.id)">Remove</button>
+                  <a mat-menu-item routerLink="/films/{{card.filmID}}">Expand</a>
+                  <button mat-menu-item *ngIf="userAuthorized" (click)="removeFilm(card.filmID)">Remove</button>
                 </mat-menu>
               </mat-card-title>
             </mat-card-header>
             <mat-card-content class="dashboard-card-content">
-              <div class="image">Film image</div>
-              <div>{{ card.reviewAuthor }}</div>
+              <div class="image">
+                <img [src]="card.image" *ngIf="card.image">
+              </div>
+              <div>{{ card.addedBy }}</div>
             </mat-card-content>
           </mat-card>
         </mat-grid-tile>

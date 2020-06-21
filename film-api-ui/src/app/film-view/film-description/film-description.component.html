@@ -1,10 +1,12 @@
 <div class="container" *ngIf="film">
-    <div class="image"></div>
+    <div class="image">
+        <img [src]="film.image" *ngIf="film.image">
+    </div>
     <div class="description">
-        <h1>{{film.title}}</h1> 
-        <i class="author">Written by {{film.reviewAuthor}}</i>
+        <h1>{{ film.title }}</h1> 
+        <i class="author">Written by {{ film.addedBy }}</i>
         <p class="content">
-            {{film.description}}
+            {{ film.description }}
         </p>
     </div>
 </div>

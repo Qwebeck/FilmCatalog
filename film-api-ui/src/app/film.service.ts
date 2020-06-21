@@ -1,24 +1,43 @@
 import { Injectable } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { of, Observable, throwError } from 'rxjs';
+import { catchError, retry,tap } from 'rxjs/operators';
 import { Film } from './film';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilmService {
+  private readonly url: string = "https://localhost:5001/films"; 
 
-  films: Film[] = [
-    { id: 1 ,title: 'Interstellar', reviewAuthor: "John", description: "Like the great space epics of the past, Christopher Nolan’s “Interstellar” distills terrestrial anxieties and aspirations into a potent pop parable, a mirror of the mood down here on Earth. Stanley Kubrick’s “2001: A Space Odyssey” blended the technological awe of the Apollo era with the trippy hopes and terrors of the Age of Aquarius. George Lucas’s first “Star Wars” trilogy, set not in the speculative future but in the imaginary past, answered the malaise of the ’70s with swashbuckling nostalgia. “Interstellar,” full of visual dazzle, thematic ambition, geek bait and corn (including the literal kind), is a sweeping, futuristic adventure driven by grief, dread and regret."},
-    { id: 2, title: 'Django', reviewAuthor: "John", description: ""},
-    { id: 3, title: 'Dunkerk', reviewAuthor: "John", description: ""},
-  ]
-  constructor() { }
+  films: Film[] = [ ]
+  constructor(private http: HttpClient) { }
   
   getFilms(): Observable<Film[]> {
-    return of(this.films);
+    return this.http.get<Film[]>(this.url, { observe: 'body', responseType: 'json' }).pipe(
+      tap( response => {
+        console.log("Fetched: ", response);
+        this.films = response;
+      })
+    );
   }
 
   getFilm(id: number): Observable<Film> {
-    return of(this.films.find( f => f.id == id));
+    return of(this.films.find( f => f.filmID == id));
+  }
+
+  saveFilm(film: Film): Observable<Film> {
+    let obj = {
+      Genre: film.genre,
+      Image: film.image,
+      Title: film.title,
+      AddedBy: "1",
+      Description: film.description,
+      UserID: 1
+    };
+    return this.http.post<Film>(this.url, obj).pipe(
+      tap((_) => console.log("Saved: ", film))
+    );
   }
 }

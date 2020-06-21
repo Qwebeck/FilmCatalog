@@ -21,7 +21,13 @@
 }
 
 .image {
+  width: 100%;
   height: 150px;
+  background-color: rgba(88, 91, 92, 0.521);
+  img {
+      width: auto;
+      height: 100%;
+  }
 }
 
 a {

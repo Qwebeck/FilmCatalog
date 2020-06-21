@@ -1,0 +1,47 @@
+
+<div class="editor">
+    <mat-grid-list cols="2" rowHeight="2:1">
+        <mat-grid-tile-header><h1>General details</h1></mat-grid-tile-header>
+        <mat-grid-tile>
+            <mat-form-field appearance="standard">
+                <input matInput placeholder="Film title" [(ngModel)]="film.title">
+                <mat-hint>Film title</mat-hint>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field appearance="standard">
+                <input matInput placeholder="Director" [(ngModel)]="film.director">
+                <mat-hint>Director</mat-hint>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field appearance="standart">
+                <mat-select [(ngModel)]="film.genre">
+                    <mat-option value="other">Other</mat-option>
+                </mat-select>
+                <mat-form-field *ngIf="otherGenre" appearance="standard">
+                    <input matInput placeholder="Genre" [(ngModel)]="film.genre">
+                    <mat-hint>Genre</mat-hint>
+                </mat-form-field>
+            </mat-form-field>
+        </mat-grid-tile>
+    
+        <mat-grid-tile>
+            <button mat-stroked-button color="basic"><label for="image">Choose Image</label></button>
+            <input #file style="display:none;" id="image" type="file" accept='image/*' (change)="upload(file.files)" />
+        </mat-grid-tile>
+</mat-grid-list>
+    <h1>Description</h1>
+    <mat-form-field appearance="outline" style="width: 95%;">
+        <textarea matInput type="text" placeholder="Write something" [(ngModel)]="film.description" rows="20"></textarea>
+      </mat-form-field>
+    <mat-grid-list cols="2" rowHeight="2:1">
+        <mat-grid-tile>
+            <button mat-stroked-button color="basic" (click)="publish()">Publish</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button mat-stroked-button color="warn" (click)="cancel()">Cancel</button>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>
+
