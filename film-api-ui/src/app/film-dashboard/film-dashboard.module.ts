@@ -13,10 +13,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { FilterComponent } from './filter/filter.component';
+import { SharedModule } from '../shared/shared.module';
+import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
+import { FilmSearchComponent } from './film-search/film-search.component';
 
 @NgModule({
-  declarations: [DashboardComponent, ToolbarComponent],
+  declarations: [DashboardComponent, FilterComponent, DashboardViewComponent, FilmSearchComponent],
   imports: [
     CommonModule,
     LayoutModule,
@@ -30,7 +33,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     MatSidenavModule,
     MatInputModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    SharedModule
   ],
   exports: [
     DashboardComponent

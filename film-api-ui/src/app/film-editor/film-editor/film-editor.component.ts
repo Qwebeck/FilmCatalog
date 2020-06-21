@@ -1,7 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Film } from 'src/app/film';
-import { AuthenticationService } from '../../authentication.service';
 import { FilmService } from '../../film.service';
+import { OktaAuthService } from '@okta/okta-angular';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-film-editor',
@@ -11,17 +13,26 @@ import { FilmService } from '../../film.service';
 export class FilmEditorComponent implements OnInit {
 
   @Input() film: Film;
+  @Input() editing = false;
+  @Output() previewEnabled = new EventEmitter<boolean>();
+  _previewEnabled = true;
+
   otherGenre: boolean = false;
   genres: string[] = [];
 
   constructor(
-    private auth: AuthenticationService,
-    private filmService: FilmService
+    private auth: OktaAuthService,
+    private filmService: FilmService,
+    private location: Location,
+    private router: Router
   ) { }
 
-  ngOnInit(): void {
-    this.film.addedBy = this.auth.currentUser();
-    this.filmService.getFilms()
+  async ngOnInit() {
+    // this.film.addedBy = this.auth.currentUser();
+    const token = await this.auth.getAccessToken();
+    let user = await this.auth.getUser();
+    this.film.addedBy = this.film.addedBy || user.name;
+    this.filmService.getFilms(token)
       .subscribe(
         films => this.genres = films.map(f => f.genre ) || []
       )
@@ -29,15 +40,24 @@ export class FilmEditorComponent implements OnInit {
 
   publish(): void {
     console.log("Saving: ", this.film);
-    console.log("Type of image is: ", typeof this.film);
     this.filmService.saveFilm(this.film)
       .subscribe(_ => console.log("ok"));
   }
 
   cancel(): void {
-
+    this.location.back();
   }
 
+  remove(): void {
+    this.filmService.deleteFilm(this.film);
+    this.router.navigate(["dashboard"])
+  }
+
+  togglePreview() {
+    this._previewEnabled = !this._previewEnabled;
+    this.previewEnabled.emit(this._previewEnabled);
+  }
+  
   upload(files): void {
     if (files.length === 0)
       return;

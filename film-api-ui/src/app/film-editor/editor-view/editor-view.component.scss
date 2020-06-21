@@ -3,6 +3,5 @@
     flex-direction: row;
 }
 .col-2 {
-    min-width: 45%;
-    margin: 5px;
+    flex-grow: 1;
 }

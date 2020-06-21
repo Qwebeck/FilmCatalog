@@ -1,6 +1,7 @@
 <mat-toolbar color="primary" class="menu">
     <span>Film catalog</span>
     <p class="placeholder"></p>
+    <p *ngIf="userClaims">{{userName}}</p>
     <!-- <button class="action-btn" mat-stroked-button *ngFor="let action of actions">{{ action.name }}</button> -->
     <a *ngIf="isAuthenticated" class="action=btn" mat-stroked-button routerLink="film_editor"> Add review </a> 
     <button *ngIf="!isAuthenticated" class="action-btn" mat-stroked-button (click)="login()"> Login </button>

@@ -1,9 +1,4 @@
 
-<mat-drawer-container  [autosize]="false">
-    <mat-drawer mode="side" opened>
-      <app-toolbar></app-toolbar>
-    </mat-drawer>
-    <mat-drawer-content>
     <div class="grid-container">
       <h1 class="mat-h1">Film collection</h1>
       <mat-grid-list cols="3" rowHeight="350px">
@@ -17,7 +12,6 @@
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before">
                   <a mat-menu-item routerLink="/films/{{card.filmID}}">Expand</a>
-                  <button mat-menu-item *ngIf="userAuthorized" (click)="removeFilm(card.filmID)">Remove</button>
                 </mat-menu>
               </mat-card-title>
             </mat-card-header>
@@ -25,14 +19,12 @@
               <div class="image">
                 <img [src]="card.image" *ngIf="card.image">
               </div>
-              <div>{{ card.addedBy }}</div>
+              <div>{{ card.genre }} {{ card.director }}</div>
+              <div style="text-align: left;"><i>{{ card.description | truncateText: 200}}</i></div>
             </mat-card-content>
           </mat-card>
         </mat-grid-tile>
       </mat-grid-list>
     </div>
-  </mat-drawer-content>
-
-</mat-drawer-container>
   
 

@@ -1,0 +1,8 @@
+    <h2> Genres </h2>
+    <mat-form-field>
+        <mat-label>Film Genres</mat-label>
+        <mat-select multiple [(ngModel)]="genres">
+          <mat-option *ngFor="let genre of filmGenres" [value]="genre">{{genre}}</mat-option>
+        </mat-select>
+      </mat-form-field><br/>
+    <button *ngIf="genres" mat-stroked-button (click)="apply()">Apply filters</button>

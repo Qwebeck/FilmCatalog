@@ -3,7 +3,10 @@
         <img [src]="film.image" *ngIf="film.image">
     </div>
     <div class="description">
-        <h1>{{ film.title }}</h1> 
+        <div class="title">
+            <h1>{{ film.title }}</h1>
+            <button *ngIf="couldEdit" mat-stroked-button color="basic" routerLink="/film_editor/{{film.filmID}}">Edit</button><br/>
+        </div>
         <i class="author">Written by {{ film.addedBy }}</i>
         <p class="content">
             {{ film.description }}

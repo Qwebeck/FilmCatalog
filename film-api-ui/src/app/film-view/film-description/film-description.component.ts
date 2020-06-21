@@ -13,12 +13,14 @@ import { Location } from '@angular/common';
 export class FilmDescriptionComponent implements OnInit {
 
   @Input() film: Film;
+  @Input() couldEdit: boolean = true; 
 
   constructor(
     private filmService: FilmService,
     private route: ActivatedRoute,
     private location: Location) { }
 
+  // TODO Refactor it. Very not intuitive 
   ngOnInit(): void {
     if ( !this.film ) {
       let id = +this.route.snapshot.paramMap.get("id");
@@ -26,6 +28,7 @@ export class FilmDescriptionComponent implements OnInit {
         .subscribe( f => this.film = f);
     }
   }
+
   goBack(): void {
     this.location.back();
   }
