@@ -2,88 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
 using FilmApi.Models;
+using FilmApi.Utils;
+using Newtonsoft.Json;
+using System.IO;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Linq.Expressions;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace FilmApi.Controllers
 {
-    public static class LinqExtensions 
-    {
-        private static PropertyInfo GetPropertyInfo(Type type, string name) 
-        {
-            var properties = type.GetProperties();
-            var matchedProperty = properties.FirstOrDefault(p => p.Name == name);
-            if (matchedProperty == null)
-                throw new ArgumentException("name");
-            return matchedProperty;
-        }
-        private static LambdaExpression GetOrderExpression(Type type, PropertyInfo info) 
-        {
-            var paramExpression = Expression.Parameter(type);
-            var propAcces = Expression.PropertyOrField(paramExpression, info.Name);
-            var expression = Expression.Lambda(propAcces, paramExpression);
-            return expression;
-        }
-        public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> query, string name) 
-        {
-            var propInfo = GetPropertyInfo(typeof(T), name);
-            var propAccess = GetOrderExpression(typeof(T), propInfo);
-            var method = typeof(Enumerable).GetMethods().FirstOrDefault(m => m.Name == "OrderBy" && m.GetParameters().Length == 2);
-            var genericMethod = method.MakeGenericMethod(typeof(T), propInfo.PropertyType);
-            return (IEnumerable<T>)genericMethod.Invoke(null, new object[] { query, propAccess.Compile() });
-        }
-
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string name)
-        {
-            var propInfo = GetPropertyInfo(typeof(T), name);
-            var access = GetOrderExpression(typeof(T), propInfo);
-
-            var method = typeof(Queryable).GetMethods().FirstOrDefault(m => m.Name == "OrderBy" && m.GetParameters().Length == 2);
-            var genericMethod = method.MakeGenericMethod(typeof(T), propInfo.PropertyType);
-            return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, access });
-        }
-
-        public static IEnumerable<T> OrderBy<T> (this IEnumerable<T> query, string [] names) 
-        {
-            foreach (var name in names)
-            {
-                query = query.OrderBy(name);
-            }
-            return query;
-        }
-
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string[] names) 
-        {
-            foreach (var name in names) 
-            {
-                query = query.OrderBy(name);
-            }
-            return query;
-        }
-    }
     [Route("[controller]")]
-    [ApiController]
     public class FilmsController : ControllerBase
     {
         private readonly Context _context;
+        private string ImageLocation = $"{Environment.CurrentDirectory}\\Data\\Images";
+        private Random random = new Random();
 
         public FilmsController(Context context)
         {
             _context = context;
         }
 
-        // GET: api/Films
+        // GET: Films
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<FilmDTO>>> GetFilms()
         {
+            Console.WriteLine("Come here");
             return await Task.FromResult(_context.Films.Select(f => new FilmDTO(f)).ToList());
         }
 
@@ -108,7 +57,7 @@ namespace FilmApi.Controllers
                                 .Select(f => new FilmDTO(f))
                                 .ToListAsync();
             }
-            catch (ArgumentException ) 
+            catch (ArgumentException ex) 
             {
                 // TODO bad field to order by
                 return BadRequest();
@@ -138,7 +87,7 @@ namespace FilmApi.Controllers
             }
             return films;
         }
-        // GET: api/Films/5
+        // GET: Films/5
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetFilm(long id)
         {
@@ -148,14 +97,14 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
-            return await Task.FromResult(new
-            {
-                Film = new FilmDTO(film),
-                Comments = film.Comments.Select(c => new CommentDTO(c)).ToList()
-            });
+            return await Task.FromResult(new FilmDTO(film, true));
+            // {
+            //     new FilmDTO(film),
+            //     Comments = film.Comments.Select(c => new CommentDTO(c)).ToList()
+            // });
         }
 
-        // PUT: api/Films/5
+        // PUT: Films/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -187,12 +136,43 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Films
+        private string SaveImage(string dataUri)
+        {
+            Debug.WriteLine(ImageLocation);
+            var matches = System.Text.RegularExpressions.Regex.Match(dataUri, @"data:image/(?<type>.+?);(?<base>.+?),(?<data>.+)");
+            var data = Convert.FromBase64String(matches.Groups["data"].Value);
+            var type = matches.Groups["type"].Value;
+            var prefix = DateTime.Now.ToString("dmM");
+            var path = $"{ImageLocation}\\{prefix}{random.Next()}.{type}";
+            if (! System.IO.File.Exists(path))
+            {
+                Console.WriteLine(path);
+                System.IO.File.WriteAllBytes( path, data);
+            }
+            else
+            {
+                throw new Exception("File already exists");
+            }
+            return path;
+        }
+
+        // POST: Films
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Film>> PostFilm(Film film)
+        public async Task<ActionResult<Film>> PostFilm(FilmDTO content)
         {
+            // var requestBody = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+            // var path = SaveImage(requestBody["image"]);
+            var path = SaveImage(content.Image);
+            var film = new Film {
+            Title=content.Title, 
+            Description=content.Description,
+            Genre=content.Genre, 
+            Director=content.Director, 
+            ImagePath=path,
+            UserID=content.UserID};
+            // var film = new Film(requestBody, path); 
             try 
             {
                 if (FilmExists(film))
@@ -200,15 +180,16 @@ namespace FilmApi.Controllers
                 _context.Films.Add(film);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException) 
+            catch (DbUpdateException ex) 
             {
                 // Change on more verbose
+                Console.WriteLine(ex.Message);
                 return BadRequest();
             }
             return CreatedAtAction("GetFilm", new { id = film.FilmID }, film);
         }
 
-        // DELETE: api/Films/5
+        // DELETE: Films/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<FilmDTO>> DeleteFilm(long id)
         {

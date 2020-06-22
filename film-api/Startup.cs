@@ -11,6 +11,7 @@ namespace FilmApi
 {
     public class Startup
     {
+        private readonly string PoliciesName = "defaultPolicies";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,6 +38,20 @@ namespace FilmApi
                 OktaDomain = Configuration["Okta:OktaDomain"],
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    buidler =>
+                    {
+                        buidler.WithOrigins(
+                            "http://127.0.0.1:4200", 
+                            "https://127.0.0.1:4200", 
+                            "http://localhost:4200",
+                            "https://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             services.AddAuthorization();
 
             services.AddControllers();
@@ -53,6 +68,8 @@ namespace FilmApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 

@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Film } from '../../film';
-import { FilmService } from '../../film.service';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+
 
 
 @Component({
@@ -12,24 +10,17 @@ import { Location } from '@angular/common';
 })
 export class FilmDescriptionComponent implements OnInit {
 
-  @Input() film: Film;
-  @Input() couldEdit: boolean = true; 
+  @Input() 
+  film?: Film;
+  
+  @Input()
+  readMode: boolean; 
 
-  constructor(
-    private filmService: FilmService,
-    private route: ActivatedRoute,
-    private location: Location) { }
+  constructor() { }
 
-  // TODO Refactor it. Very not intuitive 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     if ( !this.film ) {
-      let id = +this.route.snapshot.paramMap.get("id");
-      this.filmService.getFilm(id)
-        .subscribe( f => this.film = f);
+      this.film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
     }
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 }

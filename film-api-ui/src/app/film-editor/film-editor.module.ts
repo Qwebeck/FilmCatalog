@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import { FilmViewModule } from '../film-view/film-view.module';
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [FilmEditorComponent, EditorViewComponent],
   imports: [
@@ -19,7 +20,8 @@ import { FilmViewModule } from '../film-view/film-view.module';
     FormsModule,
     MatInputModule,
     MatButtonModule,
-    FilmViewModule
+    FilmViewModule,
+    SharedModule
   ],
   exports: [ 
     EditorViewComponent

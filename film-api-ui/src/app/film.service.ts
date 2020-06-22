@@ -29,7 +29,8 @@ export class FilmService {
   }
 
   getFilm(id: number): Observable<Film> {
-    return of(this.films.find( f => f.filmID == id));
+    const filmUrl = `${this.url}/${id}`;
+    return this.http.get<Film>(filmUrl);
   }
 
   saveFilm(film: Film): Observable<Film> {
@@ -60,7 +61,8 @@ export class FilmService {
   }
 
   findByGenres(genres: string[]): Observable<Film[]> {
-    const url = `${this.url}/findByGenres?genres=${genres.join()}`;
+    const query = genres.map(g => `genre=${g}&`).join("");
+    const url = `${this.url}/genres?${query}`;
     return this.http.get<Film[]>(url);
   }
 }

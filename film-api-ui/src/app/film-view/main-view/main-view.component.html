@@ -1,1 +1,6 @@
-<p>main-view works!</p>
+<app-menu></app-menu>
+<app-film-description [film]="film" [readMode]="true" ></app-film-description>
+<div class="comment-section">
+    <app-comment-editing-block></app-comment-editing-block>
+    <app-film-comment *ngFor="let comment of film.comments" [comment]=comment></app-film-comment>
+</div>

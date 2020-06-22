@@ -14,8 +14,8 @@ namespace FilmApi.Models
         public long FilmID { get; set; }
       //  public long? PreviousCommentID { get; set; }
 
-        public virtual User Author { get; set; }
-        public virtual Film CommentedFilm { get; set; }
+        public virtual User? Author { get; set; }
+        public virtual Film? CommentedFilm { get; set; }
        // public virtual ICollection<Comment>? NextComments { get; set; }
 
         public Comment( string content, long userID, long filmID )
