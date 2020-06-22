@@ -1,9 +1,10 @@
 <mat-toolbar color="primary" class="menu">
-    <span>Film catalog</span>
+    <a mat-stroked-button routerLink="/">Film catalog</a>
     <p class="placeholder"></p>
-    <p *ngIf="userClaims">{{userName}}</p>
-    <!-- <button class="action-btn" mat-stroked-button *ngFor="let action of actions">{{ action.name }}</button> -->
+    <p *ngIf="userName">{{userName}}</p>
+<!--  -->
     <a *ngIf="isAuthenticated" class="action=btn" mat-stroked-button routerLink="/film_editor"> Add review </a> 
     <button *ngIf="!isAuthenticated" class="action-btn" mat-stroked-button (click)="login()"> Login </button>
+    <button *ngIf="!isAuthenticated" class="action-btn" mat-stroked-button (click)="openSignupModal()"> Sign up </button>
     <button *ngIf="isAuthenticated" class="action-btn" mat-stroked-button (click)="logout()"> Logout </button>
 </mat-toolbar>

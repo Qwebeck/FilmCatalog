@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { SignupFormComponent } from '../signup-form/signup-form.component';
+import { SignupManagerService } from '../signup-manager.service';
 
 @Component({
   selector: 'app-menu',
@@ -15,7 +18,9 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private auth: OktaAuthService,
-    private locaction: Location
+    private locaction: Location,
+    private dialog: MatDialog,
+    private signupManager: SignupManagerService
   ) { 
     this.auth.$authenticationState.subscribe(
       (isAuthenticated) => this.isAuthenticated = isAuthenticated
@@ -32,16 +37,24 @@ export class MenuComponent implements OnInit {
 
   login(): void {
     this.auth.login();
-    // this.auth.login();
-    // this.isAuthenticated = this.auth.isAuthenticated;
   }
 
   logout(): void {
-    this.auth.logout
-    // this.auth.logout();
-    // this.isAuthenticated = this.auth.isAuthenticated;
+    this.auth.logout();
   }
+
   goBack(): void {
     this.locaction.back();
+  }
+
+  openSignupModal(): void {
+    const dialogRef = this.dialog.open(SignupFormComponent, {
+      width: '400px',
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.signupManager.signup(result)
+          .subscribe( result => console.log('here'));
+    });
   }
 }
