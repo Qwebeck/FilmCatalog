@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-menu',
@@ -13,7 +14,8 @@ export class MenuComponent implements OnInit {
   userName: string;
 
   constructor(
-    private auth: OktaAuthService
+    private auth: OktaAuthService,
+    private locaction: Location
   ) { 
     this.auth.$authenticationState.subscribe(
       (isAuthenticated) => this.isAuthenticated = isAuthenticated
@@ -22,18 +24,24 @@ export class MenuComponent implements OnInit {
 
   async ngOnInit() {
     this.isAuthenticated = await this.auth.isAuthenticated(); 
-    this.userClaims = await this.auth.getUser();
-    this.userName = this.userClaims.name;
+    if ( this.isAuthenticated ) {
+      this.userClaims = await this.auth.getUser();
+      this.userName = this.userClaims.name;
+    }
   }
 
   login(): void {
-    this.auth.loginRedirect();
+    this.auth.login();
     // this.auth.login();
     // this.isAuthenticated = this.auth.isAuthenticated;
   }
 
   logout(): void {
+    this.auth.logout
     // this.auth.logout();
     // this.isAuthenticated = this.auth.isAuthenticated;
+  }
+  goBack(): void {
+    this.locaction.back();
   }
 }
