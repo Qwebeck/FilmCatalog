@@ -8,7 +8,7 @@ namespace FilmApi.Models
         [Range(0, 5,
         ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public float MarkValue { get; set; }
-        public long? UserID { get; set; }
+        public string? UserID { get; set; }
         public long FilmID { get; set; }
         public virtual Film? MarkedFilm { get; set; }
         public virtual User? Author { get; set; }
@@ -24,7 +24,8 @@ namespace FilmApi.Models
         {
             MarkValue = mark.MarkValue;
             FilmTitle = mark.MarkedFilm.Title;
-            AuthoredBy = mark.Author.Username;
+            AuthoredBy = $"{mark.Author.FirstName} {mark.Author.LastName}";
+
         }
     }
 }

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using FilmApi.DAL;
 using FilmApi.Models;
 using FilmApi.Utils;
-using Newtonsoft.Json;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Authorization;
+
 
 namespace FilmApi.Controllers
 {
@@ -29,10 +29,8 @@ namespace FilmApi.Controllers
 
         // GET: Films
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<FilmDTO>>> GetFilms()
         {
-            Console.WriteLine("Come here");
             return await Task.FromResult(_context.Films.Select(f => new FilmDTO(f)).ToList());
         }
 
@@ -64,6 +62,7 @@ namespace FilmApi.Controllers
             }
             return films;
         }
+
         [HttpGet("marks")]
         public async Task<ActionResult<IEnumerable<FilmDTO>>> FindByMark([FromQuery(Name = "lower")] int lower, [FromQuery(Name = "upper")] int upper, [FromQuery] string[] orderBy)
         {
@@ -97,7 +96,7 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
-            return await Task.FromResult(new FilmDTO(film, true));
+            return await Task.FromResult(new FilmDTO(film));
             // {
             //     new FilmDTO(film),
             //     Comments = film.Comments.Select(c => new CommentDTO(c)).ToList()
@@ -108,6 +107,7 @@ namespace FilmApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutFilm(long id, Film film)
         {
             if (id != film.FilmID)
@@ -136,9 +136,9 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
-        private string SaveImage(string dataUri)
+        private string SaveImage(string? dataUri)
         {
-            Debug.WriteLine(ImageLocation);
+            if ( dataUri == "" || dataUri == null ) return "";
             var matches = System.Text.RegularExpressions.Regex.Match(dataUri, @"data:image/(?<type>.+?);(?<base>.+?),(?<data>.+)");
             var data = Convert.FromBase64String(matches.Groups["data"].Value);
             var type = matches.Groups["type"].Value;
@@ -160,10 +160,10 @@ namespace FilmApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Film>> PostFilm(FilmDTO content)
-        {
-            // var requestBody = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
-            // var path = SaveImage(requestBody["image"]);
+        [Authorize]
+        public async Task<ActionResult<Film>> PostFilm([FromBody] FilmDTO content)
+        {            
+
             var path = SaveImage(content.Image);
             var film = new Film {
             Title=content.Title, 
@@ -191,6 +191,7 @@ namespace FilmApi.Controllers
 
         // DELETE: Films/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<FilmDTO>> DeleteFilm(long id)
         {
             var film = await _context.Films.FindAsync(id);
@@ -217,6 +218,7 @@ namespace FilmApi.Controllers
         }
 
         [HttpPut("{id}/marks")]
+        [Authorize]
         public async Task<ActionResult<Mark>> MarkFilm(long id, Mark newMark) 
         {
             if (id != newMark.FilmID)

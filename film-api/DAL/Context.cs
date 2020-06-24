@@ -27,11 +27,11 @@ namespace FilmApi.DAL
                 .Property(c => c.PublicationDate)
                 .HasDefaultValueSql("getdate()");
 
-            var converter = new EnumToStringConverter<Roles>();
-            modelBuilder
-                .Entity<User>()
-                .Property(u => u.Role)
-                .HasConversion(converter);
+            //var converter = new EnumToStringConverter<Roles>();
+            //modelBuilder
+            //    .Entity<User>()
+            //    .Property(u => u.Role)
+            //    .HasConversion(converter);
 
         }
     }

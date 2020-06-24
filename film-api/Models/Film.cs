@@ -14,11 +14,11 @@ namespace FilmApi.Models
         public string Genre { get; set; }
         public string? Director { get; set; } 
         public string? ImagePath { get; set; }
-        public long UserID { get; set; }
+        public string UserID { get; set; }
         public virtual User? ReviewAuthor { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
         public virtual ICollection<Mark>? Marks { get; set; }
-        public Film( string title, string description, long userID, string genre)
+        public Film( string title, string description, string userID, string genre)
         {
             Title = title;
             Description = description;
@@ -34,7 +34,7 @@ namespace FilmApi.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string? Director { get; set; }
-        public long UserID {get ; set; }
+        public string UserID {get ; set; }
         public string Image { get; set; }
         public string AddedBy { get; set; }
         public string Genre { get; set; }
@@ -48,7 +48,7 @@ namespace FilmApi.Models
             Title = film.Title;
             Description = film.Description;
             Director = film.Director;
-            AddedBy = film.ReviewAuthor?.Username ?? "";
+            AddedBy = $"{film.ReviewAuthor.FirstName} {film.ReviewAuthor.LastName}" ;
             Image = UploadImage(film.ImagePath);
             Genre = film.Genre;
             if ( film.Marks.Count > 0 )

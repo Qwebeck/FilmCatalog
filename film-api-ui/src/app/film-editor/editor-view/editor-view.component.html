@@ -3,7 +3,7 @@
     <div class="col-2">
         <app-film-editor [film]="film" [editing]="editing" (previewEnabled)="showPreview=$event"></app-film-editor>
     </div>
-    <div *ngIf="showPreview" class="col-2 rendered">
+    <div *ngIf="showPreview" class="col-2 preview">
         <app-film-description [film]="film" [readMode]="false"></app-film-description>
     </div>
 </div>

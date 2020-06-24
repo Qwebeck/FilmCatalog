@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
@@ -45,6 +45,7 @@ namespace FilmApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutComment(long id, Comment comment)
         {
             if (id != comment.CommentID)
@@ -77,6 +78,7 @@ namespace FilmApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
             // TODO Change it to authentication, so user that is not logged in, 
@@ -92,6 +94,7 @@ namespace FilmApi.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<CommentDTO>> DeleteComment(long id)
         {
             var comment = await _context.Comments.FindAsync(id);

@@ -11,7 +11,6 @@ namespace FilmApi
 {
     public class Startup
     {
-        private readonly string PoliciesName = "defaultPolicies";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

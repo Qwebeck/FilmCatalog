@@ -10,7 +10,7 @@ namespace FilmApi.Models
         public long CommentID { get; set; }
         public string Content { get; set; }
         public DateTime PublicationDate { get; set; }
-        public long? UserID { get; set; }
+        public string? UserID { get; set; }
         public long FilmID { get; set; }
       //  public long? PreviousCommentID { get; set; }
 
@@ -18,7 +18,7 @@ namespace FilmApi.Models
         public virtual Film? CommentedFilm { get; set; }
        // public virtual ICollection<Comment>? NextComments { get; set; }
 
-        public Comment( string content, long userID, long filmID )
+        public Comment( string content, string userID, long filmID )
         {
             Content = content;
             UserID = userID;
@@ -37,7 +37,7 @@ namespace FilmApi.Models
         public CommentDTO(Comment c)
         {
             CommentID = c.CommentID;
-            Author = c.Author.Username;
+            Author = $"{c.Author.FirstName} {c.Author.LastName}";
             Content = c.Content;
             PublicationDate = c.PublicationDate;
         }

@@ -8,8 +8,8 @@
             <button *ngIf="readMode" mat-stroked-button color="basic" routerLink="/film_editor/{{film.filmID}}">Edit</button><br/>
         </div>
         <i class="author">Written by {{ film.addedBy }}</i>
-        <p class="content">
+        <div class="content">
             {{ film.description }}
-        </p>
+        </div>
     </div>
 </div>

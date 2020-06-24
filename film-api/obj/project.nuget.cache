@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "ldaT6+mIx4saq71qF8/ir/vY8dCrcAX2a/63K0mat4K1f6knNnBfkGdvao2+g2zMlVb+cGwMIKlSTENAX62cNA==",
+  "dgSpecHash": "oo5kK9iZ+zrzz1uLzXx0h0gBem6DdlhqsfEzofS1J8lUMVYYt2pSmItCiaxNlmMNvD1lS6pyqnXhuVwuGd0nCQ==",
   "success": true,
   "projectFilePath": "D:\\Projects\\film-api\\film-api\\FilmApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bohdan\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
+    "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.7\\microsoft.aspnet.webapi.client.5.2.7.nupkg.sha512",
+    "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnet.webapi.core\\5.2.7\\microsoft.aspnet.webapi.core.5.2.7.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.1\\microsoft.aspnetcore.authentication.jwtbearer.3.1.1.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnetcore.authentication.openidconnect\\3.1.1\\microsoft.aspnetcore.authentication.openidconnect.3.1.1.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
@@ -66,6 +68,7 @@
     "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\Bohdan\\.nuget\\packages\\newtonsoft.json.bson\\1.0.1\\newtonsoft.json.bson.1.0.1.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\nuget.frameworks\\4.7.0\\nuget.frameworks.4.7.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\okta.aspnet.abstractions\\3.0.3\\okta.aspnet.abstractions.3.0.3.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\okta.aspnetcore\\3.1.1\\okta.aspnetcore.3.1.1.nupkg.sha512",
@@ -127,6 +130,7 @@
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.io.compression.zipfile\\4.3.0\\system.io.compression.zipfile.4.3.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.io.filesystem\\4.3.0\\system.io.filesystem.4.3.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Bohdan\\.nuget\\packages\\system.json\\4.7.1\\system.json.4.7.1.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.linq.expressions\\4.3.0\\system.linq.expressions.4.3.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
@@ -184,5 +188,16 @@
     "C:\\Users\\Bohdan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
     "C:\\Users\\Bohdan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.WebApi.Core 5.2.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.WebApi.Core",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }
