@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace FilmApi.AuthorityProviders
 {
@@ -52,6 +53,23 @@ namespace FilmApi.AuthorityProviders
             string id = matches.Groups["id"].Value;
             if (id == "") throw new NoIdForCreatedUserException();
             return id;
+        }
+
+
+        public async Task<bool> CheckIfAdministrator(string userID)
+        {
+            var message = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://dev-221155.okta.com/api/v1/users/{userID}/groups"),
+                Headers =
+                {
+                    { HttpRequestHeader.Authorization.ToString(), $"SSWS {oktaToken}"},
+                }
+            };
+            var response = await httpClient.SendAsync(message);
+            var content = await response.Content.ReadAsStringAsync();
+            return content.Contains("Administrators");
         }
     }
 }

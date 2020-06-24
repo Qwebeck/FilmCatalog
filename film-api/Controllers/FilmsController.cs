@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Security.Claims;
 
 namespace FilmApi.Controllers
 {
@@ -44,6 +44,7 @@ namespace FilmApi.Controllers
         [HttpGet("genres")]
         public async Task<ActionResult<IEnumerable<FilmDTO>>> FindByGenre([FromQuery(Name="genre")] string[] genres, [FromQuery] string[] orderBy ) 
         {
+            
             if (orderBy.Length == 0)
                 orderBy = new string[] { "Genre" };
             ActionResult<IEnumerable<FilmDTO>> films;
@@ -91,16 +92,12 @@ namespace FilmApi.Controllers
         public async Task<ActionResult<object>> GetFilm(long id)
         {
             var film = await _context.Films.FindAsync(id);
-
             if (film == null)
             {
                 return NotFound();
             }
+
             return await Task.FromResult(new FilmDTO(film));
-            // {
-            //     new FilmDTO(film),
-            //     Comments = film.Comments.Select(c => new CommentDTO(c)).ToList()
-            // });
         }
 
         // PUT: Films/5
@@ -113,6 +110,12 @@ namespace FilmApi.Controllers
             if (id != film.FilmID)
             {
                 return BadRequest();
+            }
+
+            var filmInDatabse = await _context.Films.FindAsync(id);
+            if ( !( await User.IsAuthorizedForAction( filmInDatabse)) )
+            {
+                return BadRequest("User should be author of review or administrator to edit it ");
             }
 
             _context.Entry(film).State = EntityState.Modified;
@@ -162,8 +165,8 @@ namespace FilmApi.Controllers
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<Film>> PostFilm([FromBody] FilmDTO content)
-        {            
-
+        {
+            string userID = User.FindFirstValue("uid");
             var path = SaveImage(content.Image);
             var film = new Film {
             Title=content.Title, 
@@ -171,7 +174,7 @@ namespace FilmApi.Controllers
             Genre=content.Genre, 
             Director=content.Director, 
             ImagePath=path,
-            UserID=content.UserID};
+            UserID=userID};
             // var film = new Film(requestBody, path); 
             try 
             {
@@ -199,7 +202,10 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
-
+            if (!( await User.IsAuthorizedForAction(film))) 
+            {
+                return BadRequest("User should be author of review or administrator to remove it ");
+            }
             _context.Films.Remove(film);
             await _context.SaveChangesAsync();
 

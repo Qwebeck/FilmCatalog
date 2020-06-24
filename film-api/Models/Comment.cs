@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FilmApi.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FilmApi.Models
 {
-    public class Comment
+    public class Comment: IHaveUserID
     {
         public long CommentID { get; set; }
         public string Content { get; set; }

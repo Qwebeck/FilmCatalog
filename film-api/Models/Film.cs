@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FilmApi.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace FilmApi.Models
 {
-    public class Film
+    public class Film: IHaveUserID
     {
         public long FilmID { get; set; }
         public string Title { get; set; }

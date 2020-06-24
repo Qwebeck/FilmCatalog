@@ -11,8 +11,11 @@ import { OktaAuthService } from '@okta/okta-angular';
 })
 export class FilmService {
   private readonly url: string = "https://localhost:5001/films"; 
-  films: Film[] = [ ]
-  constructor(private http: HttpClient) { }
+  films: Film[] = []
+
+  constructor(
+    private http: HttpClient,
+    private auth: OktaAuthService) { }
 
   getFilms(accessToken): Observable<Film[]> {
     return this.http.get<Film[]>(this.url, 
@@ -33,17 +36,23 @@ export class FilmService {
     return this.http.get<Film>(filmUrl);
   }
 
-  saveFilm(film: Film): Observable<Film> {
+  saveFilm(film: Film): void {
     let obj = {
       Genre: film.genre,
       Image: film.image,
       Title: film.title,
       AddedBy: "1",
       Description: film.description,
-      UserID: 1
+      UserID: "1"
     };
-    return this.http.post<Film>(this.url, obj).pipe(
-      tap((_) => console.log("Saved: ", film))
+    this.auth.getAccessToken().then(
+      accessToken => {
+        return this.http.post<Film>(this.url, obj, {
+          headers: { Authorization: 'Bearer ' + accessToken}
+        }).pipe(
+          tap((_) => console.log("Saved: ", film))
+        ).subscribe();
+      }
     );
   }
 

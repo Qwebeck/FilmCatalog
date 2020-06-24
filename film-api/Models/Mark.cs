@@ -1,8 +1,9 @@
-﻿using System;
+﻿using FilmApi.Utils;
+using System;
 using System.ComponentModel.DataAnnotations;
 namespace FilmApi.Models
 {
-    public class Mark
+    public class Mark: IHaveUserID
     {
         public long MarkID { get; set; }
         [Range(0, 5,

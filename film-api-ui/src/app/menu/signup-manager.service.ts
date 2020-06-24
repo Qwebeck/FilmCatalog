@@ -9,32 +9,20 @@ import { User } from './user';
 })
 export class SignupManagerService {
 
-  private url = "https://dev-221155.okta.com/api/v1/users?activate=true";
-  private token = "00-DmEWPPkypwzLTK1bdHExPWe6oGSgtrDEEIZYPjQ";
+  private url = "https://localhost:5001/users";
 
   constructor(
     private http: HttpClient
   ) { }
 
   signup(user: User): Observable<User> {
-    if ( !user.name )
-      user.name = user.email;
     let data = {
-      "profile": {
       "firstName": user.name,
       "lastName": user.surname,
       "email": user.email,
       "login": user.email,
-    },
-    "credentials": {
-      "password" : { "value": user.password }
-     }
+      "password" : user.password 
     }
-    return this.http.post<User>(this.url, data, {headers:
-      {
-        "Authorization": `SSWS ${this.token}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      }});
+    return this.http.post<User>(this.url, data);
   }
 }

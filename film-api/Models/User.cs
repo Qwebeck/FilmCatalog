@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
+using FilmApi.Utils;
 using FilmApi.Utils.Attributes;
 namespace FilmApi.Models
 {
-    public enum Roles 
-    {
-        Administrator,
-        User
-    }
-    public class User
+    public class User: IHaveUserID
     {
         public string UserID { get; set; }
         public string FirstName { get; set; }
@@ -22,20 +18,10 @@ namespace FilmApi.Models
         public User() { }
     }
 
-    //public class UserDTO
-    //{
-    //    public long UserId { get; set; }
-    //    public string Username { get; private set; }
-    //    public string Email { get; private set; }
-    //    public Roles Role { get; private set; }
-
-    //    public UserDTO(User u)
-    //        => (UserId, Username, Email, Role) = (u.UserID, u.Username, u.Email, u.Role);
-    //}
 
     public class UserDTO
     {
-        public string ID { get; set; }
+        public string? ID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

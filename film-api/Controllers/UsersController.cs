@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
 using FilmApi.Utils.JSONConverters;
 using FilmApi.AuthorityProviders;
+using System.Security.Claims;
 
 namespace FilmApi.Controllers
 {
@@ -146,11 +147,13 @@ namespace FilmApi.Controllers
         [Authorize]
         public async Task<IActionResult> PutUser(string id, UserDTO user)
         {
-            if (id != user.ID)
-            {
-                return BadRequest();
-            }
 
+            var actualUser = await _context.Users.FindAsync(id);
+            var issuerId = User.FindFirstValue("uid");
+            if ( issuerId != actualUser.UserID) 
+            {
+                return BadRequest("Only user by itself could modify his profile");
+            }
             _context.Entry(user).State = EntityState.Modified;
 
             try
@@ -197,7 +200,11 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
-
+            var issuerId = User.FindFirstValue("uid");
+            if ( issuerId != user.UserID) 
+            {
+                return BadRequest("Only user can remove his profile");
+            }
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 

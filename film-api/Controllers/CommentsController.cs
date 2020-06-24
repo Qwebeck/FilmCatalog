@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
 using FilmApi.Models;
+using FilmApi.Utils;
 
 namespace FilmApi.Controllers
 {
@@ -52,7 +53,11 @@ namespace FilmApi.Controllers
             {
                 return BadRequest();
             }
-
+            var realComment = await _context.Comments.FindAsync(id);
+            if (!(await User.IsAuthorizedForAction(realComment))) 
+            {
+                return BadRequest("User should be an author or administrator to edit this comment");
+            }            
             _context.Entry(comment).State = EntityState.Modified;
 
             try
@@ -81,14 +86,9 @@ namespace FilmApi.Controllers
         [Authorize]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            // TODO Change it to authentication, so user that is not logged in, 
-            // will never get here
-            if (comment.UserID == null)
-                return BadRequest();
-
+            
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetComment", new { id = comment.CommentID }, comment);
         }
 
@@ -102,7 +102,10 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
-
+            if (!(await User.IsAuthorizedForAction(comment))) 
+            {
+                return BadRequest("User should be an administrator or comment author to edit it");
+            }
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
