@@ -11,7 +11,7 @@ namespace FilmApi.Models
         public float MarkValue { get; set; }
         public string? UserID { get; set; }
         public long FilmID { get; set; }
-        public virtual Film? MarkedFilm { get; set; }
+        public virtual Film MarkedFilm { get; set; }
         public virtual User? Author { get; set; }
     }
 
@@ -25,8 +25,7 @@ namespace FilmApi.Models
         {
             MarkValue = mark.MarkValue;
             FilmTitle = mark.MarkedFilm.Title;
-            AuthoredBy = $"{mark.Author.FirstName} {mark.Author.LastName}";
-
+            AuthoredBy = $"{mark.Author?.FirstName ?? "Unknown"} {mark.Author?.LastName ?? "user"}";
         }
     }
 }

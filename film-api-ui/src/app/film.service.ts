@@ -10,7 +10,8 @@ import { OktaAuthService } from '@okta/okta-angular';
   providedIn: 'root'
 })
 export class FilmService {
-  private readonly url: string = "https://localhost:5001/films"; 
+  private readonly url: string = "https://localhost:5001/api/films"; 
+  
   films: Film[] = []
 
   constructor(

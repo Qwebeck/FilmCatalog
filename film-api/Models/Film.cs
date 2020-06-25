@@ -1,9 +1,6 @@
 ﻿using FilmApi.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace FilmApi.Models
 {
@@ -14,11 +11,10 @@ namespace FilmApi.Models
         public string Description { get; set; }
         public string Genre { get; set; }
         public string? Director { get; set; } 
-        public string? ImagePath { get; set; }
         public string UserID { get; set; }
         public virtual User? ReviewAuthor { get; set; }
-        public virtual ICollection<Comment>? Comments { get; set; }
-        public virtual ICollection<Mark>? Marks { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Mark> Marks { get; set; }
         public Film( string title, string description, string userID, string genre)
         {
             Title = title;
@@ -50,7 +46,6 @@ namespace FilmApi.Models
             Description = film.Description;
             Director = film.Director;
             AddedBy = $"{film.ReviewAuthor.FirstName} {film.ReviewAuthor.LastName}" ;
-            Image = UploadImage(film.ImagePath);
             Genre = film.Genre;
             if ( film.Marks.Count > 0 )
                 AverageMark = film.Marks.Average(m => m.MarkValue);
@@ -63,17 +58,5 @@ namespace FilmApi.Models
         }
 
         public FilmDTO () { }
-
-        private string UploadImage( string? imagePath ) 
-        {
-            if ( imagePath == "" || imagePath == null) return "";
-            var sb = new StringBuilder();
-            sb.Append("data:image/")
-              .Append((Path.GetExtension(imagePath)).Replace(".", ""))
-              .Append(";base64,")
-              .Append(Convert.ToBase64String(File.ReadAllBytes(imagePath)));
-            return sb.ToString();    
-        }
-
     }
 }

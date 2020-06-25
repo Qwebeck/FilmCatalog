@@ -9,7 +9,7 @@ import { User } from './user';
 })
 export class SignupManagerService {
 
-  private url = "https://localhost:5001/users";
+  private url = "https://localhost:5001/api/users";
 
   constructor(
     private http: HttpClient

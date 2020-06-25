@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Json;
+﻿using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
-using System.Web.Http;
 using FilmApi.Models;
-using System.Text;
+using System;
 
 namespace FilmApi.AuthorityProviders
 {
@@ -30,7 +27,7 @@ namespace FilmApi.AuthorityProviders
             }
             else 
             {
-                throw new HttpResponseException(message);
+                throw new ArgumentException(content);
             }
         }
         protected abstract HttpRequestMessage CreateMessage(UserDTO user);

@@ -12,27 +12,16 @@ namespace FilmApi.DAL
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Mark> Marks { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
+        public DbSet<Image> Images { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("FilmApi");
-            //modelBuilder
-            //    .Entity<Comment>()
-            //    .HasMany(c => c.NextComments)
-            //    .WithOne()
-            //    .HasForeignKey("PreviousCommentID");
-            
+
             modelBuilder
                 .Entity<Comment>()
                 .Property(c => c.PublicationDate)
                 .HasDefaultValueSql("getdate()");
-
-            //var converter = new EnumToStringConverter<Roles>();
-            //modelBuilder
-            //    .Entity<User>()
-            //    .Property(u => u.Role)
-            //    .HasConversion(converter);
-
         }
     }
 }
