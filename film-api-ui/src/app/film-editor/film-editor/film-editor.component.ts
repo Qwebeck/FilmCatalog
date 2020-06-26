@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Film } from 'src/app/film';
 import { FilmService } from '../../film.service';
-import { OktaAuthService } from '@okta/okta-angular';
+// import { OktaAuthService } from '@okta/okta-angular';
+import { AuthenticationService } from '../../menu/authentication.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -21,16 +22,15 @@ export class FilmEditorComponent implements OnInit {
   genres: string[] = [];
 
   constructor(
-    private auth: OktaAuthService,
+    private auth: AuthenticationService,
     private filmService: FilmService,
     private location: Location,
     private router: Router
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     // this.film.addedBy = this.auth.currentUser();
-    const token = await this.auth.getAccessToken();
-    let user = await this.auth.getUser();
+    let user = this.auth.currentUser;
     this.film.addedBy = this.film.addedBy || user.name;
   }
 

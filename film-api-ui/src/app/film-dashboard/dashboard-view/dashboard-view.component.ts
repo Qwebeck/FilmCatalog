@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FilmService } from '../../film.service';
-import { OktaAuthService } from '@okta/okta-angular';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { FilterComponent } from '../filter/filter.component';
 import { Film } from '../../film';
@@ -26,7 +25,6 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private filmService: FilmService,
-    private auth: OktaAuthService
   ) { }
   
   ngOnInit(): void {

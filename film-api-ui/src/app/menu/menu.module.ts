@@ -9,9 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthenticationCallbackComponent } from './authentication-callback/authentication-callback.component';
 
 @NgModule({
-  declarations: [MenuComponent, SignupFormComponent],
+  declarations: [MenuComponent, SignupFormComponent, AuthenticationCallbackComponent],
   imports: [
     CommonModule,
     MatToolbarModule,

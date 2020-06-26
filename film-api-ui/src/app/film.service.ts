@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { of, Observable, throwError, from, forkJoin } from 'rxjs';
 import { catchError, retry, tap, switchMap, mergeMap, map } from 'rxjs/operators';
 import { Film } from './film';
-import { OktaAuthService } from '@okta/okta-angular';
+// import { OktaAuthService } from '@okta/okta-angular';
+import { AuthenticationService } from './menu/authentication.service';
 import { FilmImage } from './image';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class FilmService {
 
   constructor(
     private http: HttpClient,
-    private auth: OktaAuthService) { }
+    private auth: AuthenticationService) { }
 
   getFilms(withImages: boolean, offset: number = 0, amount: number = 30): Observable<Film[]> {
     let filmUrl=`${this.url}?offset=${offset}&number=${amount}`;
@@ -65,7 +66,7 @@ export class FilmService {
     return this.http.get<Film>(filmUrl);
   }
 
-  saveFilm(film: Film): void {
+  saveFilm(film: Film) {
     let obj = {
       Genre: film.genre,
       Image: film.image,
@@ -74,15 +75,18 @@ export class FilmService {
       Description: film.description,
       UserID: "1"
     };
-    this.auth.getAccessToken().then(
-      accessToken => {
-        return this.http.post<Film>(this.url, obj, {
-          headers: { Authorization: 'Bearer ' + accessToken}
-        }).pipe(
-          tap((_) => console.log("Saved: ", film))
-        ).subscribe();
-      }
-    );
+    this.http.post<Film>(this.url, obj, {
+      headers: { Authorization: 'Bearer ' + this.auth.accessToken }
+    }).pipe(
+      tap((_) => console.log("Saved: ", film))
+    ).subscribe();
+
+
+    // this.auth.getAccessToken().then(
+    //   accessToken => {
+    //     return 
+    //   }
+    // );
   }
 
   deleteFilm(film: Film) {

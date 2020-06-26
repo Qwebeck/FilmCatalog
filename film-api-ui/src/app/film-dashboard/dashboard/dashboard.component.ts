@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { FilmService } from '../../film.service';
 import { Film } from '../../film';
-import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
+// import { OktaAuthService } from '@okta/okta-angular';
+import { AuthenticationService } from '../authentication.service';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SignupFormComponent } from '../signup-form/signup-form.component';
@@ -13,26 +14,23 @@ import { SignupManagerService } from '../signup-manager.service';
 export class MenuComponent implements OnInit {
 
   isAuthenticated: boolean;
-  userClaims;
+  // userClaims;
   userName: string;
 
   constructor(
-    private auth: OktaAuthService,
+    private auth: AuthenticationService,
     private locaction: Location,
     private dialog: MatDialog,
     private signupManager: SignupManagerService
-  ) { 
-    this.auth.$authenticationState.subscribe(
-      (isAuthenticated) => this.isAuthenticated = isAuthenticated
-    )
-  }
+  ) { }
 
-  async ngOnInit() {
-    this.isAuthenticated = await this.auth.isAuthenticated(); 
-    if ( this.isAuthenticated ) {
-      this.userClaims = await this.auth.getUser();
-      this.userName = this.userClaims.name;
-    }
+  ngOnInit() {
+    if ( this.auth.currentUser ) {
+      this.isAuthenticated = true;
+      this.userName = this.auth.currentUser.name;
+    } else {
+      this.isAuthenticated = false;
+    } 
   }
 
   login(): void {
