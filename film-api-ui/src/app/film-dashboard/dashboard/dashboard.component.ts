@@ -9,8 +9,7 @@ import { Film } from '../../interfaces/film';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  // userAuthorized: boolean = true;
-  // check if really needed
+
   filmSubscription;
   cards;
 

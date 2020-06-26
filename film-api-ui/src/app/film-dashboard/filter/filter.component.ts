@@ -1,24 +1,33 @@
 import { 
-  Component, Output, EventEmitter
+  Component, Output, EventEmitter, OnInit
 } from '@angular/core';
 import { Film } from '../../interfaces/film';
-
+import { FilmService } from '../../services/film.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class FilterComponent {
+export class FilterComponent implements OnInit{
   @Output()
   find = new EventEmitter<string[]>();
 
   genres: string[];
   filmGenres;
 
-  constructor( ) { }
+  constructor( 
+    private filmsService: FilmService
+  ) { }
 
-  update(films: Film[]): void {
-    this.filmGenres = [...new Set(films.map( f => f.genre ))];
+  ngOnInit() {
+    this.update()
+  }
+
+  update(): void {
+    this.filmsService.getGenres().subscribe(
+      genres => this.filmGenres = genres
+    )
   }
 
   apply() {

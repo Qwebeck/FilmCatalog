@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Film } from 'src/app/interfaces/film';
 import { FilmService } from '../../services/film.service';
-// import { OktaAuthService } from '@okta/okta-angular';
 import { AuthenticationService } from '../../menu/authentication.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-film-editor',
@@ -19,7 +19,7 @@ export class FilmEditorComponent implements OnInit {
   _previewEnabled = true;
 
   otherGenre: boolean = false;
-  genres: string[] = [];
+  genres: Observable<string[]>;
 
   constructor(
     private auth: AuthenticationService,
@@ -29,9 +29,9 @@ export class FilmEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.film.addedBy = this.auth.currentUser();
     let user = this.auth.currentUser;
     this.film.addedBy = this.film.addedBy || user.name;
+    this.genres = this.filmService.getGenres();
   }
 
   publish(): void {

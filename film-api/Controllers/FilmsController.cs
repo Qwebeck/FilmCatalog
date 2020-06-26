@@ -37,6 +37,17 @@ namespace FilmApi.Controllers
                 .Select(f => new FilmDTO(f))
                 .ToList());
         }
+        
+        /// <summary>
+        /// Returns genres of all existing films
+        /// </summary>
+        [HttpGet("genres")]
+        public async Task<ActionResult<IEnumerable<string>>> GetGenres()
+        {
+            return await _context.Films
+                        .Select( f => f.Genre )
+                        .ToListAsync();
+        }
 
         /// <summary>
         /// Returns collection of films, that match given genres
@@ -60,7 +71,7 @@ namespace FilmApi.Controllers
             {
                 films = await _context.Films
                                 .Where(f => genres.Contains(f.Genre) || genres.Contains(f.Genre.ToLower()))
-                                .OrderBy(orderBy)
+                                // .OrderBy(orderBy)
                                 .Select(f => new FilmDTO(f))
                                 .ToListAsync();
             }

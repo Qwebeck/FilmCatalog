@@ -22,12 +22,13 @@
         <mat-grid-tile>
             <mat-form-field appearance="standart">
                 <mat-select [(ngModel)]="film.genre">
-                    <mat-option value="other">Other</mat-option>
+                    <!-- <mat-option value="other">Other</mat-option> -->
+                    <mat-option *ngFor="let genre of genres | async" value="genre">{{ genre }}</mat-option>
                 </mat-select>
-                <mat-form-field *ngIf="otherGenre" appearance="standard">
+                <!-- <mat-form-field *ngIf="otherGenre" appearance="standard">
                     <input matInput placeholder="Genre" [(ngModel)]="film.genre">
                     <mat-hint>Genre</mat-hint>
-                </mat-form-field>
+                </mat-form-field> -->
             </mat-form-field>
         </mat-grid-tile>
     

@@ -37,7 +37,6 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
 
   private update(films: Film[]): void {
     this.updateDashboard(films);
-    this.filterComponent.update(films);
     this.filmSearchComponent.update(films);
   }
 

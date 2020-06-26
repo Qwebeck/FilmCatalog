@@ -36,6 +36,14 @@ export class FilmService {
     else
     return this.http.get<Film[]>(filmUrl);
   }
+  /**
+   * Get film with given id
+   * @param id id of film that should be returned 
+   */
+  getFilm(id: number): Observable<Film> {
+    const filmUrl = `${this.url}/${id}`;
+    return this.http.get<Film>(filmUrl);
+  }
 
   /**
    * Fetches and assign images for given films
@@ -58,13 +66,13 @@ export class FilmService {
       map(image=>{return {...film, 'image': image.data}})
     );
   }
+
   /**
-   * Get film with given id
-   * @param id id of film that should be returned 
+   * Fetches all existing genres
    */
-  getFilm(id: number): Observable<Film> {
-    const filmUrl = `${this.url}/${id}`;
-    return this.http.get<Film>(filmUrl);
+  getGenres(): Observable<string[]> {
+    const url = `${this.url}/genres`;
+    return this.http.get<string[]>(url);
   }
 
   /**
