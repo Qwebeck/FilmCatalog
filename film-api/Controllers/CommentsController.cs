@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
 using FilmApi.Models;
 using FilmApi.Utils;
-
+using System.Security.Claims;
 namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
@@ -84,12 +84,19 @@ namespace FilmApi.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult<CommentDTO>> PostComment([FromBody] CommentDTO comment)
         {
-            
-            _context.Comments.Add(comment);
+            var user = User.FindFirstValue("uid");
+            var newComment = new Comment
+            {
+                Content = comment.Content,
+                PublicationDate = DateTime.Now,
+                UserID = user,
+                FilmID = comment.FilmID
+            };
+            _context.Comments.Add(newComment);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetComment", new { id = comment.CommentID }, comment);
+            return CreatedAtAction("GetComment", new { id = newComment.CommentID }, new CommentDTO(newComment));
         }
 
         // DELETE: api/Comments/5

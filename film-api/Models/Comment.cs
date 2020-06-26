@@ -32,15 +32,20 @@ namespace FilmApi.Models
     public class CommentDTO 
     {
         public long CommentID { get; set; }
-        public string Author { get; private set; }
-        public string Content { get; private set; }
-        public DateTime PublicationDate { get; private set; }
+        public string Content { get; set; }
+        public long FilmID { get; set; }
+        public string? Author { get; private set; }
+        public DateTime? PublicationDate { get; private set; }
+
         public CommentDTO(Comment c)
         {
             CommentID = c.CommentID;
-            Author = $"{c.Author.FirstName} {c.Author.LastName}";
+            Author = $"{c.Author?.FirstName ?? ""} {c.Author?.LastName ?? ""}";
             Content = c.Content;
             PublicationDate = c.PublicationDate;
+            FilmID = c.FilmID;
         }
+
+        public CommentDTO () { }
     }
 }

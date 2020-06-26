@@ -8,7 +8,8 @@ import { FilmCommentComponent } from './film-comment/film-comment.component';
 import { CommentEditingBlockComponent } from './comment-editing-block/comment-editing-block.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatDividerModule } from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     FilmDescriptionComponent,
@@ -21,7 +22,9 @@ import { MatInputModule } from '@angular/material/input';
     SharedModule,
     MatButtonModule,
     MatGridListModule,
-    MatInputModule
+    MatInputModule,
+    MatDividerModule,
+    FormsModule
   ],
   exports: [
     FilmDescriptionComponent

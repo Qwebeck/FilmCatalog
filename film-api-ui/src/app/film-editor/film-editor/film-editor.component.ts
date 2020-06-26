@@ -36,7 +36,7 @@ export class FilmEditorComponent implements OnInit {
 
   publish(): void {
     console.log("Saving: ", this.film);
-    this.filmService.saveFilm(this.film)
+    this.filmService.saveFilm(this.film).subscribe();
   }
 
   cancel(): void {

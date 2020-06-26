@@ -7,9 +7,9 @@ import { OktaAuthService, UserClaims } from '@okta/okta-angular'
 export class AuthenticationService {
   private _currentUser: UserClaims;
   private _accessToken: string;
-  
+
   get accessToken() {
-    return this._accessToken;
+    return 'Bearer ' + this._accessToken;
   }
 
   set accessToken(value: string) {
@@ -30,6 +30,8 @@ export class AuthenticationService {
 
   logout() {
     this.oktaAuth.logout();
+    this._accessToken = "";
+    this._currentUser = null;
   }
 
   constructor(

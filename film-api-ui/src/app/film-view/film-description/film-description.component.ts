@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Film } from '../../film';
-
+import { AuthenticationService } from '../../menu/authentication.service';
 
 
 @Component({
@@ -16,7 +16,9 @@ export class FilmDescriptionComponent implements OnInit {
   @Input()
   readMode: boolean; 
 
-  constructor() { }
+  constructor(
+    public auth: AuthenticationService
+  ) { }
 
   ngOnInit(): void { 
     if ( !this.film ) {

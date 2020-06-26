@@ -127,25 +127,60 @@ namespace FilmApi.Controllers
         /// <param name="id">id of film to return</param>
         /// <returns>Description of film without image</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<FilmDTO>> GetFilm(long id)
+        public async Task<ActionResult<FilmDTO>> GetFilm(long id, [FromQuery] bool includeComments = true)
         {
             var film = await _context.Films.FindAsync(id);
             if (film == null)
             {
                 return NotFound();
             }
-            return await Task.FromResult(new FilmDTO(film));
+            return await Task.FromResult(new FilmDTO(film, includeComments));
+        }
+
+        /// <summary>
+        /// Return comments for given film
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/comments")]
+        public async Task<ActionResult<List<CommentDTO>>> GetComments(long id) 
+        {
+            var film = await _context.Films.FindAsync(id);
+            if (film == null)
+                return NotFound();
+            return await Task.FromResult(film.Comments
+                                            .Select(c => new CommentDTO(c))
+                                            .ToList());
+        }
+
+        /// <summary>
+        /// Return user marks for film with filmID
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/marks")]
+        public async Task<ActionResult<List<MarkDTO>>> GetMarks(long filmId) 
+        {
+            var film = await _context.Films.FindAsync(filmId);
+            if (film == null)
+            {
+                return NotFound();
+            }
+            _context.Entry(film).Collection(f => f.Marks).Load();
+            return await Task.FromResult(film.Marks
+                                    .Select(m => new MarkDTO(m))
+                                    .ToList());
         }
 
         /// <summary>
         /// Image of film with given id
         /// </summary>
-        /// <param name="filmID">id of film for which image should be fond</param>
+        /// <param name="id">id of film for which image should be fond</param>
         /// <returns></returns>
-        [HttpGet("{filmID}/image")]
-        public async Task<ActionResult<Image>> GetImage(long filmID) 
+        [HttpGet("{id}/image")]
+        public async Task<ActionResult<Image>> GetImage(long id) 
         {
-            var image = await _context.Images.Where(img => img.FilmID == filmID).FirstOrDefaultAsync();
+            var image = await _context.Images.Where(img => img.FilmID == id).FirstOrDefaultAsync();
             if ( image == null ) 
             {
                 return NotFound();
@@ -235,7 +270,7 @@ namespace FilmApi.Controllers
         /// <returns></returns>
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<FilmDTO>> DeleteFilm(long id)
+        public async Task<ActionResult<FilmDTO>> DeleteFilm( long id )
         {
             var film = await _context.Films.FindAsync(id);
             if (film == null)
@@ -252,21 +287,7 @@ namespace FilmApi.Controllers
             return new FilmDTO(film);
         }
 
-        /// <summary>
-        /// Return comments for given film
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}/comments")]
-        public async Task<ActionResult<List<CommentDTO>>> GetComments(long id) 
-        {
-            var film = await _context.Films.FindAsync(id);
-            if (film == null)
-                return NotFound();
-            return await Task.FromResult(film.Comments
-                                            .Select(c => new CommentDTO(c))
-                                            .ToList());
-        }
+      
 
         /// <summary>
         /// Adds new mark for film
@@ -301,24 +322,7 @@ namespace FilmApi.Controllers
             return response;
         }
 
-        /// <summary>
-        /// Return user marks for film with filmID
-        /// </summary>
-        /// <param name="filmId"></param>
-        /// <returns></returns>
-        [HttpGet("{id}/marks")]
-        public async Task<ActionResult<List<MarkDTO>>> GetMarks(long filmId) 
-        {
-            var film = await _context.Films.FindAsync(filmId);
-            if (film == null)
-            {
-                return NotFound();
-            }
-            _context.Entry(film).Collection(f => f.Marks).Load();
-            return await Task.FromResult(film.Marks
-                                    .Select(m => new MarkDTO(m))
-                                    .ToList());
-        }
+     
 
         private bool FilmExists(Film film)
         {

@@ -66,7 +66,7 @@ export class FilmService {
     return this.http.get<Film>(filmUrl);
   }
 
-  saveFilm(film: Film) {
+  saveFilm(film: Film): Observable<Film> {
     let obj = {
       Genre: film.genre,
       Image: film.image,
@@ -75,18 +75,11 @@ export class FilmService {
       Description: film.description,
       UserID: "1"
     };
-    this.http.post<Film>(this.url, obj, {
-      headers: { Authorization: 'Bearer ' + this.auth.accessToken }
+    return this.http.post<Film>(this.url, obj, {
+      headers: { Authorization: this.auth.accessToken }
     }).pipe(
       tap((_) => console.log("Saved: ", film))
-    ).subscribe();
-
-
-    // this.auth.getAccessToken().then(
-    //   accessToken => {
-    //     return 
-    //   }
-    // );
+    )
   }
 
   deleteFilm(film: Film) {

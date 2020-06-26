@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Film } from '../../film';
 import { FilmService } from '../../film.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../../menu/authentication.service';
 
 @Component({
   selector: 'app-main-view',
@@ -12,7 +13,8 @@ export class MainViewComponent implements OnInit {
 
   constructor(
     private filmService: FilmService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public auth: AuthenticationService
   ) { }
 
   film: Film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
