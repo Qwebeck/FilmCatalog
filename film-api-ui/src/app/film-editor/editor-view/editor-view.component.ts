@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Film } from '../../film';
+import { Film } from '../../interfaces/film';
 import { ActivatedRoute } from '@angular/router';
-import { FilmService } from '../../film.service';
+import { FilmService } from '../../services/film.service';
 
 @Component({
   selector: 'app-editor-view',

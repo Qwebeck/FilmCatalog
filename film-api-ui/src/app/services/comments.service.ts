@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FilmComment } from './film-comment';
-import { Film } from './film';
-import { AuthenticationService } from './menu/authentication.service';
+import { FilmComment } from '../interfaces/film-comment';
+import { Film } from '../interfaces/film';
+import { AuthenticationService } from '../menu/authentication.service';
 @Injectable({
   providedIn: 'root'
 })

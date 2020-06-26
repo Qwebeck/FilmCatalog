@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Film } from '../../film';
-import { FilmService } from '../../film.service';
+import { Film } from '../../interfaces/film';
+import { FilmService } from '../../services/film.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../menu/authentication.service';
 

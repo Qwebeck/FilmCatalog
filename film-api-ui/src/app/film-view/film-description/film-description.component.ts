@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Film } from '../../film';
+import { Film } from '../../interfaces/film';
 import { AuthenticationService } from '../../menu/authentication.service';
 
 

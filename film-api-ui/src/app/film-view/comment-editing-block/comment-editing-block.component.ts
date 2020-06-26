@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FilmComment } from 'src/app/film-comment';
-import { CommentsService } from '../../comments.service';
-import { Film } from 'src/app/film';
+import { FilmComment } from 'src/app/interfaces/film-comment';
+import { CommentsService } from '../../services/comments.service';
+import { Film } from 'src/app/interfaces/film';
 
 @Component({
   selector: 'app-comment-editing-block',

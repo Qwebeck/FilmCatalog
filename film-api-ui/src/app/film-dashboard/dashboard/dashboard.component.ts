@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Film } from '../../film';
+import { Film } from '../../interfaces/film';
 
 @Component({
   selector: 'app-dashboard',

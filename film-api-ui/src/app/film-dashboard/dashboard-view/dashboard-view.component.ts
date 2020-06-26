@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FilmService } from '../../film.service';
+import { FilmService } from '../../services/film.service';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { FilterComponent } from '../filter/filter.component';
-import { Film } from '../../film';
+import { Film } from '../../interfaces/film';
 import { FilmSearchComponent } from '../film-search/film-search.component';
 
 @Component({

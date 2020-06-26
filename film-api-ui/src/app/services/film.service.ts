@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable, throwError, from, forkJoin } from 'rxjs';
 import { catchError, retry, tap, switchMap, mergeMap, map } from 'rxjs/operators';
-import { Film } from './film';
+import { Film } from '../interfaces/film';
 // import { OktaAuthService } from '@okta/okta-angular';
-import { AuthenticationService } from './menu/authentication.service';
-import { FilmImage } from './image';
+import { AuthenticationService } from '../menu/authentication.service';
+import { FilmImage } from '../interfaces/image';
 
 @Injectable({
   providedIn: 'root'

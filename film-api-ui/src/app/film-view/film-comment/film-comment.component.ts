@@ -1,7 +1,7 @@
 import { 
   Component, OnInit, Input
 } from '@angular/core';
-import { FilmComment } from '../../film-comment'; 
+import { FilmComment } from '../../interfaces/film-comment'; 
 
 @Component({
   selector: 'app-film-comment',

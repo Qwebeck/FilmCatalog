@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Film } from 'src/app/film';
-import { FilmService } from '../../film.service';
+import { Film } from 'src/app/interfaces/film';
+import { FilmService } from '../../services/film.service';
 // import { OktaAuthService } from '@okta/okta-angular';
 import { AuthenticationService } from '../../menu/authentication.service';
 import { Location } from '@angular/common';
