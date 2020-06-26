@@ -36,17 +36,22 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
   }
 
   private update(films: Film[]): void {
-    this.dashboardComponent.update(films);
+    this.updateDashboard(films);
     this.filterComponent.update(films);
     this.filmSearchComponent.update(films);
+  }
+
+  private updateDashboard(films: Film[]): void {
+    this.dashboardComponent.update(films);
+    this.filmService.assignImages(films)
+      .subscribe(films => this.dashboardComponent.update(films));
+
   }
 
   getFilms() {
       this.filmSubscription = this.filmService.getFilms(false)
                                               .subscribe( films => {
                                                 this.update(films)
-                                                this.filmService.assignImages(films)
-                                                    .subscribe(films => this.dashboardComponent.update(films));
                                               });
   }
   
