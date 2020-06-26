@@ -18,7 +18,13 @@ export class FilmService {
   constructor(
     private http: HttpClient,
     private auth: AuthenticationService) { }
-
+  
+  /**
+   * Fetches n films from the api, starting from offset
+   * @param withImages if False, fetches only JSON describing film, otherwise - json with images
+   * @param offset id from which films should be fetched
+   * @param amount amount of films to fetch
+   */
   getFilms(withImages: boolean, offset: number = 0, amount: number = 30): Observable<Film[]> {
     let filmUrl=`${this.url}?offset=${offset}&number=${amount}`;
     if ( withImages )
@@ -31,11 +37,83 @@ export class FilmService {
     return this.http.get<Film[]>(filmUrl);
   }
 
+  /**
+   * Fetches and assign images for given films
+   * @param films films for which images should be fetched
+   */
   assignImages(films: Film[]): Observable<Film[]> {
     return this.fetchImages(films)
             .pipe(
               map(images => this.mapImages(images, films))
             );
+  }
+
+  /**
+   * Fetches and assign image for film given as argument 
+   * @param film 
+   */
+  assignImage(film: Film): Observable<Film> {
+    const url = `${this.url}/${film.filmID}/image`;
+    return this.http.get<FilmImage>(url).pipe(
+      map(image=>{return {...film, 'image': image.data}})
+    );
+  }
+  /**
+   * Get film with given id
+   * @param id id of film that should be returned 
+   */
+  getFilm(id: number): Observable<Film> {
+    const filmUrl = `${this.url}/${id}`;
+    return this.http.get<Film>(filmUrl);
+  }
+
+  /**
+   * Saves film
+   * @param film film, that should be saved
+   */
+  saveFilm(film: Film): Observable<Film> {
+    let obj = {
+      Genre: film.genre,
+      Image: film.image,
+      Title: film.title,
+      Description: film.description,
+    };
+    return this.http.post<Film>(this.url, obj, {
+      headers: { Authorization: this.auth.accessToken }
+    }).pipe(
+      tap((_) => console.log("Saved: ", film))
+    )
+  }
+
+  /**
+   * Removes film given as an argument
+   * @param film to remove
+   */
+  deleteFilm(film: Film) {
+    const id = film.filmID;
+    const delUrl = `${this.url}/${id}`; 
+    return this.http.delete<Film>(delUrl).subscribe(
+      (_) => this.films = this.films.filter( f => f !== film)
+    );
+  }
+
+  /**
+   * Fetches films that mathcing given title
+   * @param title title to which films should match
+   */
+  findByTitle(title: string): Observable<Film[]> {
+    const url = `${this.url}/findByTitle?title=${title}`;
+    return this.http.get<Film[]>(url);
+  }
+  /**
+   * Fethes films that have given genres
+   * @param genres genres that should be fetched
+   * @param amount amount of films to fetch
+   */
+  findByGenres(genres: string[], amount: number=30): Observable<Film[]> {
+    const query = genres.map(g => `genre=${g}&`).join("");
+    const url = `${this.url}/findByGenres?${query}`;
+    return this.http.get<Film[]>(url);
   }
 
   private log(films:Film[]): void {
@@ -61,43 +139,4 @@ export class FilmService {
     return this.http.get<FilmImage[]>(url)
   }
 
-  getFilm(id: number): Observable<Film> {
-    const filmUrl = `${this.url}/${id}`;
-    return this.http.get<Film>(filmUrl);
-  }
-
-  saveFilm(film: Film): Observable<Film> {
-    let obj = {
-      Genre: film.genre,
-      Image: film.image,
-      Title: film.title,
-      AddedBy: "1",
-      Description: film.description,
-      UserID: "1"
-    };
-    return this.http.post<Film>(this.url, obj, {
-      headers: { Authorization: this.auth.accessToken }
-    }).pipe(
-      tap((_) => console.log("Saved: ", film))
-    )
-  }
-
-  deleteFilm(film: Film) {
-    const id = film.filmID;
-    const delUrl = `${this.url}/${id}`; 
-    return this.http.delete<Film>(delUrl).subscribe(
-      (_) => this.films = this.films.filter( f => f !== film)
-    );
-  }
-
-  findByTitle(title: string): Observable<Film[]> {
-    const url = `${this.url}/findByTitle?title=${title}`;
-    return this.http.get<Film[]>(url);
-  }
-
-  findByGenres(genres: string[]): Observable<Film[]> {
-    const query = genres.map(g => `genre=${g}&`).join("");
-    const url = `${this.url}/findByGenres?${query}`;
-    return this.http.get<Film[]>(url);
-  }
 }

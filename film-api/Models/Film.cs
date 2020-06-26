@@ -31,9 +31,9 @@ namespace FilmApi.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string? Director { get; set; }
-        public string UserID {get ; set; }
-        public string Image { get; set; }
-        public string AddedBy { get; set; }
+        public string? UserID {get ; set; }
+        public string? Image { get; set; }
+        public string? AddedBy { get; set; }
         public string Genre { get; set; }
         public float? AverageMark { get; set; }
         public List<CommentDTO>? Comments {get; set;}

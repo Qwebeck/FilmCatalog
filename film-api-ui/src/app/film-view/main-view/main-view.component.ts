@@ -26,7 +26,9 @@ export class MainViewComponent implements OnInit {
   getFilm(): void {
       let id = +this.route.snapshot.paramMap.get("id");
       this.filmService.getFilm(id)
-        .subscribe( f => this.film = f);
-  }
-
+        .subscribe( f => {
+          this.film = f
+          this.filmService.assignImage(f).subscribe( f => this.film = f)
+        });
+      }
 }
