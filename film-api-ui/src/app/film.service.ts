@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { of, Observable, throwError } from 'rxjs';
-import { catchError, retry,tap } from 'rxjs/operators';
+import { of, Observable, throwError, from, forkJoin } from 'rxjs';
+import { catchError, retry, tap, switchMap, mergeMap, map } from 'rxjs/operators';
 import { Film } from './film';
 import { OktaAuthService } from '@okta/okta-angular';
-
+import { FilmImage } from './image';
 
 @Injectable({
   providedIn: 'root'
@@ -18,18 +18,46 @@ export class FilmService {
     private http: HttpClient,
     private auth: OktaAuthService) { }
 
-  getFilms(accessToken): Observable<Film[]> {
-    return this.http.get<Film[]>(this.url, 
-      { 
-        headers: { Authorization: 'Bearer ' + accessToken},  
-        observe: 'body', 
-        responseType: 'json' }
-      ).pipe(
-      tap( response => {
-        console.log("Fetched: ", response);
-        this.films = response;
-      })
-    );
+  getFilms(withImages: boolean, offset: number = 0, amount: number = 30): Observable<Film[]> {
+    let filmUrl=`${this.url}?offset=${offset}&number=${amount}`;
+    if ( withImages )
+    return this.http.get<Film[]>(filmUrl).pipe(
+      mergeMap( films => this.fetchImages(films).pipe(
+        map(images => this.mapImages(images, films)),
+        tap(this.log)
+      )));
+    else
+    return this.http.get<Film[]>(filmUrl);
+  }
+
+  assignImages(films: Film[]): Observable<Film[]> {
+    return this.fetchImages(films)
+            .pipe(
+              map(images => this.mapImages(images, films))
+            );
+  }
+
+  private log(films:Film[]): void {
+    this.films = films;
+    console.log("Fetched: ", this.films);
+  }
+
+  private mapImages(images: FilmImage[], films: Film[]): Film[] {
+    let sortedImages = images.sort((a,b) => a.filmID - b.filmID);
+    let j = 0;
+    for (let i = 0; i < films.length; ++i) {
+      if ( sortedImages[j].filmID == films[i].filmID ) {
+          films[i].image = sortedImages[j].data;
+          j += 1; 
+      }
+    }
+    return films;
+  }
+
+  private fetchImages(films: Film[]): Observable<FilmImage[]> {
+    const query = films.map(f => `filmid=${f.filmID}&`).join("");
+    const url = `https://localhost:5001/api/images?${query}`;
+    return this.http.get<FilmImage[]>(url)
   }
 
   getFilm(id: number): Observable<Film> {
@@ -72,7 +100,7 @@ export class FilmService {
 
   findByGenres(genres: string[]): Observable<Film[]> {
     const query = genres.map(g => `genre=${g}&`).join("");
-    const url = `${this.url}/genres?${query}`;
+    const url = `${this.url}/findByGenres?${query}`;
     return this.http.get<Film[]>(url);
   }
 }

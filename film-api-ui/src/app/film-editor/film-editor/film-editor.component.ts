@@ -32,10 +32,6 @@ export class FilmEditorComponent implements OnInit {
     const token = await this.auth.getAccessToken();
     let user = await this.auth.getUser();
     this.film.addedBy = this.film.addedBy || user.name;
-    this.filmService.getFilms(token)
-      .subscribe(
-        films => this.genres = films.map(f => f.genre ) || []
-      )
   }
 
   publish(): void {

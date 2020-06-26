@@ -16,10 +16,7 @@ export class DashboardComponent {
   filmSubscription;
   cards;
 
-  constructor(
-    private breakpointObserver: BreakpointObserver,
-    private filmService: FilmService,
-    private auth: OktaAuthService )
+  constructor(private breakpointObserver: BreakpointObserver)
   { }
 
   // Ask if there is any other
@@ -29,6 +26,7 @@ export class DashboardComponent {
         let col: number;
         if (matches) col = 3;
         else col = 1;
+        console.log(films.map(film => {return {...film}}));
         return films.map(film => {return {...film, cols: col, rows: 1}}) 
       })
     )

@@ -44,11 +44,12 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
   }
 
   getFilms() {
-    this.auth.getAccessToken()
-    .then( 
-      (token) => this.filmSubscription = this.filmService.getFilms(token)
-                                              .subscribe( films => this.update(films))
-    );
+      this.filmSubscription = this.filmService.getFilms(false)
+                                              .subscribe( films => {
+                                                this.update(films)
+                                                this.filmService.assignImages(films)
+                                                    .subscribe(films => this.dashboardComponent.update(films));
+                                              });
   }
   
   findByTitle(title: string) {
