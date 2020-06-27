@@ -16,6 +16,8 @@ export class FilmDescriptionComponent implements OnInit {
   @Input()
   readMode: boolean; 
 
+  couldEdit: boolean = false;
+
   constructor(
     public auth: AuthenticationService
   ) { }
@@ -23,6 +25,9 @@ export class FilmDescriptionComponent implements OnInit {
   ngOnInit(): void { 
     if ( !this.film ) {
       this.film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
+    }
+    else {
+      this.couldEdit = this.readMode && this.auth.currentUser && (this.auth.currentUser.name == this.film.addedBy || this.auth.currentUser.groups.includes("Administrators"))
     }
   }
 }

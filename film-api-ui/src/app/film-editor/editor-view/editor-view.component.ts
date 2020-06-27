@@ -29,7 +29,6 @@ export class EditorViewComponent implements OnInit {
           this.filmService.assignImage(this.film)
             .subscribe(f => this.film = {...f});
         });
-
     }
   }
 }
