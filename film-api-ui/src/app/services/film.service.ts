@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { of, Observable, throwError, from, forkJoin } from 'rxjs';
+import { of, Observable, throwError, from, forkJoin, pipe } from 'rxjs';
 import { catchError, retry, tap, switchMap, mergeMap, map } from 'rxjs/operators';
 import { Film } from '../interfaces/film';
 // import { OktaAuthService } from '@okta/okta-angular';
@@ -12,6 +12,7 @@ import { FilmImage } from '../interfaces/image';
 })
 export class FilmService {
   private readonly url: string = "https://localhost:5001/api/films"; 
+  private lastFetchedFilm: Film;
   
   films: Film[] = []
 
@@ -41,8 +42,11 @@ export class FilmService {
    * @param id id of film that should be returned 
    */
   getFilm(id: number): Observable<Film> {
+    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == id ) return of(this.lastFetchedFilm); 
     const filmUrl = `${this.url}/${id}`;
-    return this.http.get<Film>(filmUrl);
+    return this.http.get<Film>(filmUrl).pipe(
+      tap(f => this.lastFetchedFilm = f)
+    );
   }
 
   /**
@@ -61,9 +65,11 @@ export class FilmService {
    * @param film 
    */
   assignImage(film: Film): Observable<Film> {
+    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == film.filmID && this.lastFetchedFilm.image ) return of(this.lastFetchedFilm);
     const url = `${this.url}/${film.filmID}/image`;
     return this.http.get<FilmImage>(url).pipe(
-      map(image=>{return {...film, 'image': image.data}})
+      map(image=>{return {...film, 'image': image.data}}),
+      tap( film => this.lastFetchedFilm = film )
     );
   }
 
@@ -86,11 +92,27 @@ export class FilmService {
       Title: film.title,
       Description: film.description,
     };
-    return this.http.post<Film>(this.url, obj, {
-      headers: { Authorization: this.auth.accessToken }
-    }).pipe(
-      tap((_) => console.log("Saved: ", film))
-    )
+    const headers = { Authorization: this.auth.accessToken };
+    return this.http.post<Film>(this.url, obj, {headers: headers}).pipe(
+            tap((_) => console.log("Saved: ", film)))
+  }
+
+  /**
+   * Updates film
+   * @param film 
+   */
+  updateFilm(film: Film): Observable<Film> {
+    let obj = {
+      Genre: film.genre,
+      Image: film.image,
+      Title: film.title,
+      Description: film.description,
+    };
+    const url = `${this.url}/${film.filmID}`;
+    const headers = { Authorization: this.auth.accessToken };
+    return this.http.put<Film>(url, obj, {headers: headers}).pipe(
+          tap((_) => console.log("Updated: ", film)))
+
   }
 
   /**

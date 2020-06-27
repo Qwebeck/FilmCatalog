@@ -207,34 +207,48 @@ namespace FilmApi.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutFilm(long id, Film film)
+        public async Task<IActionResult> PutFilm(long id, [FromBody] FilmDTO film)
         {
-            if (id != film.FilmID)
+            var filmInDatabse = await _context.Films.FindAsync(id);
+
+            if ( filmInDatabse == null )
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            var filmInDatabse = await _context.Films.FindAsync(id);
             if ( !( await User.IsAuthorizedForAction( filmInDatabse)) )
             {
                 return BadRequest("User should be an author of review or administrator to edit it ");
             }
 
-            _context.Entry(film).State = EntityState.Modified;
+            var imageInDatabse = await _context.Images
+                                        .Where( im => im.FilmID == filmInDatabse.FilmID )
+                                        .FirstOrDefaultAsync();
+            if ( film.Image != "" && film.Image != null )
+            {
+                if ( imageInDatabse != null ) 
+                {
+                    imageInDatabse.Data = film.Image;
+                    _context.Entry(imageInDatabse).State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.Images.Add(new Image{ FilmID = id, Data = film.Image});
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            filmInDatabse.Title = film.Title;
+            filmInDatabse.Description = film.Description;
+            filmInDatabse.Genre = film.Genre;
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FilmExists(film))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+              
             }
             return NoContent();
         }
@@ -298,8 +312,6 @@ namespace FilmApi.Controllers
             return new FilmDTO(film);
         }
 
-      
-
         /// <summary>
         /// Adds new mark for film
         /// </summary>
@@ -332,8 +344,6 @@ namespace FilmApi.Controllers
 
             return response;
         }
-
-     
 
         private bool FilmExists(Film film)
         {

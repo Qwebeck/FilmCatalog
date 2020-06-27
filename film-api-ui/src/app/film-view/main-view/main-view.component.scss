@@ -3,6 +3,10 @@
     margin: auto;
 }
 
+.hidden {
+    opacity: 0;
+}
+
 .spinner {
     display: flex; 
     justify-content: center; 

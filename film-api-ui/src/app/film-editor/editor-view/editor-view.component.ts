@@ -25,8 +25,9 @@ export class EditorViewComponent implements OnInit {
       this.filmService.getFilm(id)
         .subscribe( f => {
           this.editing = true;
-          // creating copy of object, so edited film will not reference to existing film
           this.film ={ ...f};
+          this.filmService.assignImage(this.film)
+            .subscribe(f => this.film = {...f});
         });
 
     }

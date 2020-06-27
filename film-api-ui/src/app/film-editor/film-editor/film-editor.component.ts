@@ -13,9 +13,15 @@ import { Observable } from 'rxjs';
 })
 export class FilmEditorComponent implements OnInit {
 
-  @Input() film: Film;
-  @Input() editing = false;
-  @Output() previewEnabled = new EventEmitter<boolean>();
+  @Input() 
+  film: Film;
+  
+  @Input()
+  editing = false;
+  
+  @Output()
+  previewEnabled = new EventEmitter<boolean>();
+  
   _previewEnabled = true;
 
   otherGenre: boolean = false;
@@ -36,9 +42,14 @@ export class FilmEditorComponent implements OnInit {
 
   publish(): void {
     console.log("Saving: ", this.film);
-    this.filmService.saveFilm(this.film).subscribe(
-      r => this.router.navigate(['/dashboard'])
-    );
+    if ( !this.editing ) 
+      this.filmService.saveFilm(this.film).subscribe(
+        _ => this.router.navigate(['/dashboard'])
+      );
+    else 
+      this.filmService.updateFilm(this.film).subscribe(
+        r => this.router.navigate(['/dashboard'])
+      );
   }
 
   cancel(): void {
