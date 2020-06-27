@@ -23,22 +23,24 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
   private filmSearchComponent: FilmSearchComponent; 
 
   filmSubscription;
+  currentOffset: number = 0;
+  films:Film[] = []; 
 
   constructor(
     private filmService: FilmService,
   ) { }
   
   ngOnInit(): void {
-    this.getFilms();
+    this.getFilms(this.currentOffset);
   }
 
   ngOnDestroy(): void {
     this.filmSubscription.unsubscribe();
   }
 
-  getFilms() {
+  getFilms(offset: number) {
       this.loaded = false;
-      this.filmSubscription = this.filmService.getFilms(false)
+      this.filmSubscription = this.filmService.getFilms(false, offset)
                                               .subscribe( films => {
                                                 this.update(films)
                                               });
@@ -55,8 +57,19 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
       (films) => this.update(films)
     )
   }
+
+  previousPage() {
+    this.currentOffset -= 1;
+    this.getFilms(this.currentOffset);
+  }
+
+  nextPage() {
+    this.currentOffset += 1;
+    this.getFilms(this.currentOffset);
+  }
   
   private update(films: Film[]): void {
+    this.films = films;
     this.updateDashboard(films);
     this.filmSearchComponent.update(films);
     this.loaded = true;

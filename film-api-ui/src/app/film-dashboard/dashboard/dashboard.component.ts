@@ -16,7 +16,6 @@ export class DashboardComponent {
   constructor(private breakpointObserver: BreakpointObserver)
   { }
 
-  // Ask if there is any other
   update(films: Film[]): void {
     this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
       map( ({ matches }) => {
@@ -29,7 +28,4 @@ export class DashboardComponent {
     )
   } 
 
-  removeFilm(id: number): void {
-    alert(`Removing film with id=${id}`);
-  }
 }

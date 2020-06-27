@@ -26,8 +26,8 @@ export class FilmService {
    * @param offset id from which films should be fetched
    * @param amount amount of films to fetch
    */
-  getFilms(withImages: boolean, offset: number = 0, amount: number = 30): Observable<Film[]> {
-    let filmUrl=`${this.url}?offset=${offset}&number=${amount}`;
+  getFilms(withImages: boolean, offset: number = 0, amount: number = 9): Observable<Film[]> {
+    let filmUrl=`${this.url}?offset=${offset*amount}&number=${amount}`;
     if ( withImages )
     return this.http.get<Film[]>(filmUrl).pipe(
       mergeMap( films => this.fetchImages(films).pipe(
@@ -140,7 +140,7 @@ export class FilmService {
    * @param genres genres that should be fetched
    * @param amount amount of films to fetch
    */
-  findByGenres(genres: string[], amount: number=30): Observable<Film[]> {
+  findByGenres(genres: string[], amount: number=9): Observable<Film[]> {
     const query = genres.map(g => `genre=${g}&`).join("");
     const url = `${this.url}/findByGenres?${query}`;
     return this.http.get<Film[]>(url);
@@ -155,7 +155,7 @@ export class FilmService {
     let sortedImages = images.sort((a,b) => a.filmID - b.filmID);
     let j = 0;
     for (let i = 0; i < films.length; ++i) {
-      if ( sortedImages[j].filmID == films[i].filmID ) {
+      if ( j < sortedImages.length && sortedImages[j].filmID == films[i].filmID ) {
           films[i].image = sortedImages[j].data;
           j += 1; 
       }

@@ -10,6 +10,10 @@
     </div>
     </mat-drawer>
     <mat-drawer-content>
+        <div class="button-bar">
+            <button mat-flat-button [disabled]="currentOffset===0" (click)="previousPage()">Previous page</button>
+            <button mat-flat-button [disabled]="films.length < 9" (click)="nextPage()">Next page</button>
+        </div>
         <app-dashboard></app-dashboard>
     </mat-drawer-content>
 </mat-drawer-container>

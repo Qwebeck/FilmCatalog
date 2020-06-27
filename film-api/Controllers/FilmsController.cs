@@ -273,18 +273,20 @@ namespace FilmApi.Controllers
             };
             
             if (FilmExists(film))
-                 return BadRequest();
+                 return BadRequest("FIlm Already exists");
             _context.Films.Add(film);
             await _context.SaveChangesAsync();
 
-            var image = new Image
+            if(content.Image != null && content.Image != "") 
             {
-                FilmID = film.FilmID,
-                Data = content.Image
-            };
-            _context.Images.Add(image);
-            await _context.SaveChangesAsync();
-
+                var image = new Image
+                {
+                    FilmID = film.FilmID,
+                    Data = content.Image
+                };
+                _context.Images.Add(image);
+                await _context.SaveChangesAsync();
+            }
             return CreatedAtAction("GetFilm", new { id = film.FilmID }, film);
         }
         
