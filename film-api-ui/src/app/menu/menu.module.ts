@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthenticationCallbackComponent } from './authentication-callback/authentication-callback.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [MenuComponent, SignupFormComponent, AuthenticationCallbackComponent],
@@ -22,7 +23,8 @@ import { AuthenticationCallbackComponent } from './authentication-callback/authe
     FormsModule,
     MatDialogModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MenuComponent

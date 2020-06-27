@@ -1,8 +1,13 @@
 <app-menu></app-menu>
-<app-film-description [film]="film" [readMode]="true" ></app-film-description>
-<mat-divider></mat-divider>
-<div class="comment-section">
-    <h1 *ngIf="film.comments && film.comments.length > 0">Comments</h1>
-    <app-comment-editing-block *ngIf="auth.currentUser" [currentFilm]="film"></app-comment-editing-block>
-    <app-film-comment *ngFor="let comment of film.comments" [comment]=comment></app-film-comment>
+<div *ngIf="!loaded" class="spinner">
+    <mat-spinner></mat-spinner>
+</div>
+<div [class.hidden]="!loaded">
+    <app-film-description [film]="film" [readMode]="true" ></app-film-description>
+    <mat-divider></mat-divider>
+    <div class="comment-section">
+        <h1 *ngIf="film.comments && film.comments.length > 0">Comments</h1>
+        <app-comment-editing-block *ngIf="auth.currentUser" [currentFilm]="film"></app-comment-editing-block>
+        <app-film-comment *ngFor="let comment of film.comments" [comment]=comment></app-film-comment>
+    </div>
 </div>

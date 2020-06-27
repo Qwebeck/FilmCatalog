@@ -11,7 +11,8 @@ import { FilmSearchComponent } from '../film-search/film-search.component';
   styleUrls: ['./dashboard-view.component.scss']
 })
 export class DashboardViewComponent implements OnInit, OnDestroy {
-  
+  loaded: boolean = false;
+
   @ViewChild(DashboardComponent)
   private dashboardComponent: DashboardComponent;
 
@@ -35,19 +36,8 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
     this.filmSubscription.unsubscribe();
   }
 
-  private update(films: Film[]): void {
-    this.updateDashboard(films);
-    this.filmSearchComponent.update(films);
-  }
-
-  private updateDashboard(films: Film[]): void {
-    this.dashboardComponent.update(films);
-    this.filmService.assignImages(films)
-      .subscribe(films => this.dashboardComponent.update(films));
-
-  }
-
   getFilms() {
+      this.loaded = false;
       this.filmSubscription = this.filmService.getFilms(false)
                                               .subscribe( films => {
                                                 this.update(films)
@@ -64,5 +54,17 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
     this.filmService.findByGenres(genres).subscribe(
       (films) => this.update(films)
     )
+  }
+  
+  private update(films: Film[]): void {
+    this.updateDashboard(films);
+    this.filmSearchComponent.update(films);
+    this.loaded = true;
+  }
+
+  private updateDashboard(films: Film[]): void {
+    this.dashboardComponent.update(films);
+    this.filmService.assignImages(films)
+      .subscribe(films => this.dashboardComponent.update(films));
   }
 }

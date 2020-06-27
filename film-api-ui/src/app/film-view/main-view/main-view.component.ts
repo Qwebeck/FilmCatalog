@@ -16,7 +16,8 @@ export class MainViewComponent implements OnInit {
     private route: ActivatedRoute,
     public auth: AuthenticationService
   ) { }
-
+  
+  loaded: boolean = false;
   film: Film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
 
   ngOnInit(): void {
@@ -24,10 +25,12 @@ export class MainViewComponent implements OnInit {
   }
 
   getFilm(): void {
+      this.loaded = false;
       let id = +this.route.snapshot.paramMap.get("id");
       this.filmService.getFilm(id)
         .subscribe( f => {
           this.film = f
+          this.loaded = true;
           this.filmService.assignImage(f).subscribe( f => this.film = f)
         });
       }
