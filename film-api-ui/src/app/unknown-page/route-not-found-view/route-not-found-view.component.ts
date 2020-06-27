@@ -6,10 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./route-not-found-view.component.scss']
 })
 export class RouteNotFoundViewComponent implements OnInit {
-
-  constructor() { }
+  
+  constructor(
+  ) { }
 
   ngOnInit(): void {
   }
-
+  
 }

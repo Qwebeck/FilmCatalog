@@ -9,6 +9,7 @@ import { FilmDashboardModule } from './film-dashboard/film-dashboard.module';
 import { FilmViewModule } from './film-view/film-view.module';
 import { MenuModule } from './menu/menu.module';
 import { OKTA_CONFIG, OktaAuthModule } from '@okta/okta-angular';
+import { UnknownPageModule } from './unknown-page/unknown-page.module';
 
 const config = {
   clientId: '0oag0zkk4PsS8o62g4x6',
@@ -32,7 +33,8 @@ const config = {
     FilmViewModule,
     MenuModule,
     HttpClientModule,
-    FilmEditorModule
+    FilmEditorModule,
+    UnknownPageModule
   ],
   providers: [
     { provide: OKTA_CONFIG, useValue: config}
