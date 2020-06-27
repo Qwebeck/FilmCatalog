@@ -4,6 +4,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { FilterComponent } from '../filter/filter.component';
 import { Film } from '../../interfaces/film';
 import { FilmSearchComponent } from '../film-search/film-search.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-view',
@@ -25,47 +26,68 @@ export class DashboardViewComponent implements OnInit, OnDestroy {
   filmSubscription;
   currentOffset: number = 0;
   films:Film[] = []; 
+  filmSelector: (offset: number) => Observable<Film[]> =  (offset) => this.filmService.getFilms(false, offset);
 
   constructor(
     private filmService: FilmService,
   ) { }
   
   ngOnInit(): void {
-    this.getFilms(this.currentOffset);
+    this.getFilms();
   }
 
   ngOnDestroy(): void {
     this.filmSubscription.unsubscribe();
   }
 
-  getFilms(offset: number) {
+  getFilms() {
       this.loaded = false;
-      this.filmSubscription = this.filmService.getFilms(false, offset)
+      this.filmSelector = (offset) => this.filmService.getFilms(false, offset);
+      this.currentOffset = 0;
+      this.filmSubscription = this.filmService.getFilms(false, this.currentOffset)
                                               .subscribe( films => {
                                                 this.update(films)
                                               });
   }
   
   findByTitle(title: string) {
-    this.filmService.findByTitle(title).subscribe(
+    this.loaded = false;
+    this.filmSelector = (offset) => this.filmService.findByTitle(title, offset);
+    this.currentOffset = 0;
+    this.filmService.findByTitle(title, this.currentOffset).subscribe(
       (films) => this.update(films)
     );
   }
 
   findByGenres(genres: string[]) {
-    this.filmService.findByGenres(genres).subscribe(
+    this.loaded = false;
+    this.filmSelector = (offset) => this.filmService.findByGenres(genres, offset);
+    this.currentOffset = 0;
+    this.filmService.findByGenres(genres, this.currentOffset ).subscribe(
       (films) => this.update(films)
     )
   }
 
   previousPage() {
+    this.loaded = false;
     this.currentOffset -= 1;
-    this.getFilms(this.currentOffset);
+    this.filmSelector(this.currentOffset).subscribe(
+      (films) => this.update(films)
+    )
   }
 
   nextPage() {
+    this.loaded = false;
     this.currentOffset += 1;
-    this.getFilms(this.currentOffset);
+    this.filmSelector(this.currentOffset).subscribe(
+      (films) => this.update(films)
+    )
+  }
+
+  clearFilters() {
+    this.filmSelector =  (offset) => this.filmService.getFilms(false, offset);
+    this.currentOffset = 0;
+    this.getFilms();
   }
   
   private update(films: Film[]): void {

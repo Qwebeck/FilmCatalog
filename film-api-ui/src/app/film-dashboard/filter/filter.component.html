@@ -5,4 +5,7 @@
           <mat-option *ngFor="let genre of filmGenres" [value]="genre">{{genre}}</mat-option>
         </mat-select>
       </mat-form-field><br/>
-    <button *ngIf="genres" mat-stroked-button (click)="apply()">Apply filters</button>
+      <div class="tools">
+        <button *ngIf="genres" mat-stroked-button (click)="apply()">Apply filters</button>
+        <button *ngIf="genres" mat-stroked-button (click)="clearFilters()">Clear filters</button>
+      </div>

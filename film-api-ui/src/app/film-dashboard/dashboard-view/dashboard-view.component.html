@@ -6,7 +6,7 @@
     <mat-drawer mode="side" opened>
     <div class="tools">
         <app-film-search (find)="findByTitle($event)"></app-film-search>
-        <app-filter (find)="findByGenres($event)"></app-filter>
+        <app-filter (clear)="clearFilters()" (find)="findByGenres($event)"></app-filter>
     </div>
     </mat-drawer>
     <mat-drawer-content>

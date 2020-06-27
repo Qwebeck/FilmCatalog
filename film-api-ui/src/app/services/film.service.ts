@@ -131,8 +131,8 @@ export class FilmService {
    * Fetches films that mathcing given title
    * @param title title to which films should match
    */
-  findByTitle(title: string): Observable<Film[]> {
-    const url = `${this.url}/findByTitle?title=${title}`;
+  findByTitle(title: string, offset: number, amount: number=9): Observable<Film[]> {
+    const url = `${this.url}/findByTitle?title=${title}&offset=${offset*amount}&number=${amount}`;
     return this.http.get<Film[]>(url);
   }
   /**
@@ -140,9 +140,9 @@ export class FilmService {
    * @param genres genres that should be fetched
    * @param amount amount of films to fetch
    */
-  findByGenres(genres: string[], amount: number=9): Observable<Film[]> {
+  findByGenres(genres: string[], offset: number, amount: number=9): Observable<Film[]> {
     const query = genres.map(g => `genre=${g}&`).join("");
-    const url = `${this.url}/findByGenres?${query}`;
+    const url = `${this.url}/findByGenres?${query}&offset=${offset*amount}&number=${amount}`;
     return this.http.get<Film[]>(url);
   }
 

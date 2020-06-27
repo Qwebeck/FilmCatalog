@@ -46,6 +46,7 @@ namespace FilmApi.Controllers
         {
             return await _context.Films
                         .Select( f => f.Genre )
+                        .Distinct()
                         .ToListAsync();
         }
 
@@ -57,7 +58,7 @@ namespace FilmApi.Controllers
         /// <param name="order">Ascending or descending order</param>
         /// <returns></returns>
         [HttpGet("findByGenres")]
-        public async Task<ActionResult<IEnumerable<FilmDTO>>> FindByGenre([FromQuery(Name="genre")] string[] genres, [FromQuery] string[] orderBy ) 
+        public async Task<ActionResult<IEnumerable<FilmDTO>>> FindByGenre([FromQuery(Name="genre")] string[] genres, [FromQuery] string[] orderBy, [FromQuery] int number=30, [FromQuery] int offset=0 ) 
         {
 
 
@@ -71,6 +72,8 @@ namespace FilmApi.Controllers
             {
                 films = await _context.Films
                                 .Where(f => genres.Contains(f.Genre) || genres.Contains(f.Genre.ToLower()))
+                                .Skip(offset)
+                                .Take(number)
                                 // .OrderBy(orderBy)
                                 .Select(f => new FilmDTO(f))
                                 .ToListAsync();
@@ -120,10 +123,12 @@ namespace FilmApi.Controllers
         /// <param name="title">Substring of film title </param>
         /// <returns>List of matching films</returns>
         [HttpGet("findByTitle")]
-        public async Task<ActionResult<IEnumerable<FilmDTO>>> GetByTitle([FromQuery] string title)
+        public async Task<ActionResult<IEnumerable<FilmDTO>>> GetByTitle([FromQuery] string title,[FromQuery] int offset=0,[FromQuery] int number=30)
         {
             var films = await _context.Films
                               .Where(f => f.Title.Contains(title))
+                              .Skip(offset)
+                              .Take(number)
                               .ToListAsync();
             if (films.Count == 0) 
             {

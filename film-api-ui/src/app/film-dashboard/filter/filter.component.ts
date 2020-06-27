@@ -13,6 +13,9 @@ export class FilterComponent implements OnInit{
   @Output()
   find = new EventEmitter<string[]>();
 
+  @Output()
+  clear = new EventEmitter();
+  
   genres: string[];
   filmGenres;
 
@@ -32,5 +35,9 @@ export class FilterComponent implements OnInit{
 
   apply() {
     this.find.emit(this.genres);
+  }
+
+  clearFilters() {
+    this.clear.emit();
   }
 }
