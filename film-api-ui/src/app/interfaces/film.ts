@@ -8,5 +8,6 @@ export interface Film {
     genre: string,
     director?: string,
     image?: string | ArrayBuffer;
-    comments?: FilmComment[]
+    comments?: FilmComment[],
+    averageMark?: number
 }

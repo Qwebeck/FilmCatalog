@@ -32,3 +32,14 @@
 .comment {
     width: 95%;
 }
+
+.vote-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.vote-section {
+    width: 50%;
+    margin: 10px;
+}

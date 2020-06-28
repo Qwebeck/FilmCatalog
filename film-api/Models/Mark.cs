@@ -17,15 +17,18 @@ namespace FilmApi.Models
 
     public class MarkDTO 
     {
-        public float MarkValue { get; private set; }
-        public string FilmTitle { get; private set; }
-        public string AuthoredBy { get; private set; }
-
+        public float Mark { get; set; }
+        public long FilmID { get; set; }
+        public string? AuthoredBy { get; set; }
+        public string? FilmTitle { get; set; }
         public MarkDTO (Mark mark) 
         {
-            MarkValue = mark.MarkValue;
+            Mark = mark.MarkValue;
             FilmTitle = mark.MarkedFilm.Title;
             AuthoredBy = $"{mark.Author?.FirstName ?? "Unknown"} {mark.Author?.LastName ?? "user"}";
+            FilmID = mark.FilmID;
         }
+
+        public MarkDTO() { }
     }
 }

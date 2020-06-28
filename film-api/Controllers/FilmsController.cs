@@ -320,31 +320,39 @@ namespace FilmApi.Controllers
         }
 
         /// <summary>
-        /// Adds new mark for film
+        /// Adds new mark for film or replace previous 
         /// </summary>
         /// <param name="id">id of film to mark</param>
         /// <param name="newMark">new value of mark</param>
         /// <returns></returns>
         [HttpPut("{id}/marks")]
         [Authorize]
-        public async Task<ActionResult<Mark>> MarkFilm(long id, Mark newMark) 
+        public async Task<ActionResult<Mark>> MarkFilm(long id, [FromBody] MarkDTO newMark) 
         {
             if (id != newMark.FilmID)
-                return BadRequest();
+                return BadRequest(" Wrong mark format");
             
+            var userID = User.FindFirstValue("uid");
             var userMark = await _context.Marks
-                                       .Where(m => m.FilmID == id && m.UserID == newMark.UserID)
+                                       .Where(m => m.FilmID == id && m.UserID == userID)
                                        .FirstOrDefaultAsync();
             ActionResult response;
+            
             if (userMark == null)
             {
-                _context.Marks.Add(newMark);
-                response = CreatedAtAction("MarkFilm", userMark);
+                var mark = new Mark 
+                {
+                    MarkValue = newMark.Mark,
+                    UserID = userID,
+                    FilmID = newMark.FilmID        
+                };
+                _context.Marks.Add(mark);
+                response = CreatedAtAction("MarkFilm", mark);
             }
             else 
             {
                 _context.Entry(userMark).State = EntityState.Modified;
-                userMark.MarkValue = newMark.MarkValue;
+                userMark.MarkValue = newMark.Mark;
                 response = NoContent();
             }
             await _context.SaveChangesAsync();

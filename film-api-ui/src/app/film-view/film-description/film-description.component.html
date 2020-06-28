@@ -4,12 +4,20 @@
     </div>
     <div class="description">
         <div class="title">
-            <h1>{{ film.title }}</h1>
+            <h1>{{ film.title }} <i *ngIf="film.director">by {{ film.director }}</i></h1>
             <button *ngIf="couldEdit" mat-stroked-button color="basic" routerLink="/film_editor/{{film.filmID}}">Edit</button><br/>
         </div>
         <i class="author">Written by {{ film.addedBy }}</i>
         <div class="content">
             {{ film.description }}
+        </div>
+    </div>
+    <div class="vote-section" *ngIf="readMode">
+        <h1> Opinions </h1>
+        <mat-progress-bar mode="determinate" [value]="(film.averageMark || 0) * 100"></mat-progress-bar>
+        <div class="vote-buttons" *ngIf="auth.currentUser">
+            <button mat-stroked-button (click)="vote(1)">Like</button>
+            <button mat-stroked-button (click)="vote(0)">Dislike</button>
         </div>
     </div>
 </div>

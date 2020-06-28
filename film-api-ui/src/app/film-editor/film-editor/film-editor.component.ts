@@ -57,7 +57,7 @@ export class FilmEditorComponent implements OnInit {
   }
 
   remove(): void {
-    this.filmService.deleteFilm(this.film);
+    this.filmService.deleteFilm(this.film).subscribe();
     this.router.navigate(["dashboard"])
   }
 

@@ -10,6 +10,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     FilmDescriptionComponent,
@@ -24,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     MatGridListModule,
     MatInputModule,
     MatDividerModule,
-    FormsModule
+    FormsModule,
+    MatProgressBarModule    
   ],
   exports: [
     FilmDescriptionComponent
