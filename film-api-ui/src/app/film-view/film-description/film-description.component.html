@@ -5,7 +5,7 @@
     <div class="description">
         <div class="title">
             <h1>{{ film.title }} <i *ngIf="film.director">by {{ film.director }}</i></h1>
-            <button *ngIf="couldEdit" mat-stroked-button color="basic" routerLink="/film_editor/{{film.filmID}}">Edit</button><br/>
+            <button *ngIf="film.addedBy && couldEdit" mat-stroked-button color="basic" routerLink="/film_editor/{{film.filmID}}">Edit</button><br/>
         </div>
         <i class="author">Written by {{ film.addedBy }}</i>
         <div class="content">

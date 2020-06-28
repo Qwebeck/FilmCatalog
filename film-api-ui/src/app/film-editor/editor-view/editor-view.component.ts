@@ -13,7 +13,7 @@ export class EditorViewComponent implements OnInit {
   film: Film = { title: '', addedBy: '', description: '', genre: '', filmID: 0};
   showPreview: boolean = true;
   editing: boolean = false;
-
+  sending: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private filmService: FilmService
@@ -30,5 +30,9 @@ export class EditorViewComponent implements OnInit {
             .subscribe(f => this.film = {...f});
         });
     }
+  }
+
+  setMode(isSending: boolean) {
+    this.sending = isSending;
   }
 }

@@ -4,13 +4,13 @@ import { FilmService } from '../../services/film.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../menu/authentication.service';
 
+
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss']
 })
 export class MainViewComponent implements OnInit {
-
   constructor(
     private filmService: FilmService,
     private route: ActivatedRoute,

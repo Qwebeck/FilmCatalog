@@ -24,7 +24,10 @@ export class FilmEditorComponent implements OnInit {
   
   _previewEnabled = true;
 
-  otherGenre: boolean = false;
+  selectGenre: string;
+  inputGenre: string;
+  @Output()
+  sending = new EventEmitter<boolean>();
   genres: Observable<string[]>;
 
   constructor(
@@ -36,21 +39,28 @@ export class FilmEditorComponent implements OnInit {
 
   ngOnInit() {
     let user = this.auth.currentUser;
-    this.film.addedBy = this.film.addedBy || user.name;
+    if ( user )
+      this.film.addedBy = this.film.addedBy || user.name;
+    this.selectGenre = this.film.genre;
     this.genres = this.filmService.getGenres();
   }
 
   publish(): void {
+    this.film.genre = this.selectGenre === "other" 
+                      ? this.inputGenre
+                      : this.selectGenre;
+
     console.log("Saving: ", this.film);
-    if ( !this.editing ) 
-      this.filmService.saveFilm(this.film).subscribe(
-        _ => this.router.navigate(['/dashboard'])
-      );
-    else 
-      this.filmService.updateFilm(this.film).subscribe(
-        r => this.router.navigate(['/dashboard'])
-      );
-  }
+    this.sending.emit(true);
+    let senderFunction = this.editing 
+                     ? (film: Film) => this.filmService.updateFilm(film)
+                     : (film: Film) => this.filmService.saveFilm(film);
+    senderFunction({...this.film, 'comments': []}).subscribe(
+      _ => { 
+        this.sending.emit(false);
+        this.router.navigate(["dashboard"]);
+      });
+    }
 
   cancel(): void {
     this.location.back();
