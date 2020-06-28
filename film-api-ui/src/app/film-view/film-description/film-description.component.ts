@@ -23,7 +23,7 @@ export class FilmDescriptionComponent implements OnInit {
   ) { }
   
   get couldEdit(): boolean {
-    return (this.auth.currentUser.name == this.film.addedBy || 
+    return  this.readMode && this.auth.currentUser && (this.auth.currentUser.name == this.film.addedBy || 
             this.auth.currentUser.groups.includes("Administrators"))
   }
 

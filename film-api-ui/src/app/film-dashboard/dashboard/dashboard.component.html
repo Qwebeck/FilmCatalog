@@ -17,7 +17,7 @@
             </mat-card-header>
             <mat-card-content class="dashboard-card-content">
               <div class="image">
-                <img [src]="card.image" *ngIf="card.image">
+                <img [src]="card.images && card.images[0]" *ngIf="card.images && card.images.length != 0">
               </div>
               <div>{{ card.genre }} {{ card.director }}</div>
               <div style="text-align: left;"><i>{{ card.description | truncateText: 200}}</i></div>

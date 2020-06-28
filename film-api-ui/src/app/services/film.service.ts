@@ -74,10 +74,10 @@ export class FilmService {
    * @param film 
    */
   assignImage(film: Film): Observable<Film> {
-    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == film.filmID && this.lastFetchedFilm.image ) return of(this.lastFetchedFilm);
+    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == film.filmID && this.lastFetchedFilm.images ) return of(this.lastFetchedFilm);
     const url = `${this.url}/${film.filmID}/image`;
-    return this.http.get<FilmImage>(url).pipe(
-      map(image=>{return {...film, 'image': image.data}}),
+    return this.http.get<FilmImage[]>(url).pipe(
+      map(images=>{return {...film, 'images': images.map(im => im.data)}}),
       tap( film => this.lastFetchedFilm = film ),
       catchError(this.handleError<Film>('assignImage', film))
     );
@@ -100,7 +100,7 @@ export class FilmService {
   saveFilm(film: Film): Observable<Film> {
     let obj = {
       Genre: film.genre,
-      Image: film.image,
+      Images: film.images,
       Title: film.title,
       Description: film.description,
     };
@@ -117,7 +117,7 @@ export class FilmService {
   updateFilm(film: Film): Observable<Film> {
     let obj = {
       Genre: film.genre,
-      Image: film.image,
+      Image: film.images,
       Title: film.title,
       Description: film.description,
     };
@@ -181,11 +181,14 @@ export class FilmService {
   }
 
   private mapImages(images: FilmImage[], films: Film[]): Film[] {
+    console.log("Images: ",images);
     let sortedImages = images.sort((a,b) => a.filmID - b.filmID);
+    
     let j = 0;
     for (let i = 0; i < films.length; ++i) {
+      if (!films[i].images) films[i].images = [];  
       if ( j < sortedImages.length && sortedImages[j].filmID == films[i].filmID ) {
-          films[i].image = sortedImages[j].data;
+        films[i].images.push(sortedImages[j].data);
           j += 1; 
       }
     }

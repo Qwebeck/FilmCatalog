@@ -1,7 +1,5 @@
 <app-menu></app-menu>
-<div *ngIf="!loaded" class="spinner">
-    <mat-spinner></mat-spinner>
-</div>
+<mat-progress-bar *ngIf="!loaded" mode="query"></mat-progress-bar>
 <div [class.hidden]="!loaded">
     <app-film-description [film]="film" [readMode]="true" ></app-film-description>
     <mat-divider></mat-divider>

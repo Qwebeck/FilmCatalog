@@ -194,14 +194,14 @@ namespace FilmApi.Controllers
         /// <param name="id">id of film for which image should be fond</param>
         /// <returns></returns>
         [HttpGet("{id}/image")]
-        public async Task<ActionResult<Image>> GetImage(long id) 
+        public async Task<ActionResult<IEnumerable<Image>>> GetImage(long id) 
         {
-            var image = await _context.Images.Where(img => img.FilmID == id).FirstOrDefaultAsync();
-            if ( image == null ) 
+            var images = await _context.Images.Where(img => img.FilmID == id).ToListAsync();
+            if ( images == null ) 
             {
                 return NotFound();
             }
-            return  image;
+            return  images;
         }
 
         /// <summary>
@@ -226,21 +226,27 @@ namespace FilmApi.Controllers
                 return BadRequest("User should be an author of review or administrator to edit it ");
             }
 
-            var imageInDatabse = await _context.Images
+            var imagesForFilm = await _context.Images
                                         .Where( im => im.FilmID == filmInDatabse.FilmID )
-                                        .FirstOrDefaultAsync();
-            if ( film.Image != "" && film.Image != null )
+                                        .ToListAsync();
+            _context.Images.RemoveRange(imagesForFilm);
+            if ( film.Images != null && film.Images.Length != 0 )
             {
-                if ( imageInDatabse != null ) 
+                foreach( var image in film.Images ) 
                 {
-                    imageInDatabse.Data = film.Image;
-                    _context.Entry(imageInDatabse).State = EntityState.Modified;
-                }
-                else
-                {
-                    _context.Images.Add(new Image{ FilmID = id, Data = film.Image});
+                    _context.Images.Add(new Image{ FilmID = id, Data = image});
                 }
                 await _context.SaveChangesAsync();
+                // if ( imageInDatabse != null ) 
+                // {
+                //     imageInDatabse.Data = film.Image;
+                //     _context.Entry(imageInDatabse).State = EntityState.Modified;
+                // }
+                // else
+                // {
+                //     _context.Images.Add(new Image{ FilmID = id, Data = film.Image});
+                // }
+                
             }
 
             filmInDatabse.Title = film.Title;
@@ -282,14 +288,15 @@ namespace FilmApi.Controllers
             _context.Films.Add(film);
             await _context.SaveChangesAsync();
 
-            if(content.Image != null && content.Image != "") 
+            if(content.Images != null && content.Images.Length != 0) 
             {
-                var image = new Image
-                {
-                    FilmID = film.FilmID,
-                    Data = content.Image
-                };
-                _context.Images.Add(image);
+                var newImages =  content.Images
+                                 .Select(image => new Image
+                                        {
+                                            FilmID = film.FilmID,
+                                            Data = image
+                                        });
+                _context.Images.AddRange(newImages);
                 await _context.SaveChangesAsync();
             }
             return CreatedAtAction("GetFilm", new { id = film.FilmID }, film);

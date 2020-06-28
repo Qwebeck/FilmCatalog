@@ -1,7 +1,5 @@
 <app-menu></app-menu>  
-<div class="spinner" *ngIf="!loaded">
-    <mat-spinner></mat-spinner>
-</div>
+<mat-progress-bar *ngIf="!loaded" mode="query"></mat-progress-bar>
 <mat-drawer-container [class.hidden]="!loaded" [autosize]="false">
     <mat-drawer mode="side" opened>
     <div class="tools">

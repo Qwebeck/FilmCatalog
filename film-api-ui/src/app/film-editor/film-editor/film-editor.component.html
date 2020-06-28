@@ -1,6 +1,6 @@
 
 <div class="editor">
-    <mat-grid-list cols="2" rowHeight="70px">
+    <mat-grid-list cols="2" rowHeight="3:1">
         <mat-grid-tile>
             <h1>General details</h1>
         </mat-grid-tile>                
@@ -34,10 +34,16 @@
     
         <mat-grid-tile>
             <button mat-stroked-button color="basic"><label for="image">Choose Image</label></button>
-            <input #file style="display:none;" id="image" type="file" accept='image/*' (change)="upload(file.files)" />
+            <input #file style="display:none;" id="image" type="file" multiple accept='image/*' (change)="upload(file.files)"/>
         </mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
 </mat-grid-list>
-    <h1>Description</h1>
+ 
+<div *ngIf="uploaded_images.length!=0" class="uploaded_images">
+    <h1>Selected images</h1>
+    <button *ngFor="let image of uploaded_images" mat-stroked-button color="basic" (click)="removeImage(image.data)">Remove {{image.name.slice(1,10)}}...</button>
+</div>    
+<h1>Description</h1>
     <mat-form-field appearance="outline" style="width: 95%;">
         <textarea matInput type="text" placeholder="Write something" [(ngModel)]="film.description" rows="20"></textarea>
       </mat-form-field>

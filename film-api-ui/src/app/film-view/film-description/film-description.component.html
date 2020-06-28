@@ -1,6 +1,6 @@
 <div class="container" *ngIf="film">
     <div class="image">
-        <img [src]="film.image" *ngIf="film.image">
+        <img *ngIf="film.images && film.images.length != 0" [src]="film.images[0]" >
     </div>
     <div class="description">
         <div class="title">
@@ -12,6 +12,14 @@
             {{ film.description }}
         </div>
     </div>
+    <h1>Gallery</h1>
+    
+    <mat-grid-list cols="3" rowHeight="2:1">
+       <mat-grid-tile *ngFor="let image of film.images">
+            <img style="width:auto;height:auto" [src]="image"/>
+       </mat-grid-tile>
+    </mat-grid-list>
+
     <div class="vote-section" *ngIf="readMode">
         <h1> Opinions </h1>
         <mat-progress-bar mode="determinate" [value]="(film.averageMark || 0) * 100"></mat-progress-bar>
