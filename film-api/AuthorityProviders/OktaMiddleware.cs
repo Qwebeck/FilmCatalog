@@ -13,10 +13,9 @@ namespace FilmApi.AuthorityProviders
     public class OktaMiddleware: AuthorityMiddleware
     {
         private const string oktaToken = "00-DmEWPPkypwzLTK1bdHExPWe6oGSgtrDEEIZYPjQ";
-        private const string authorityUrl = "https://dev-221155.okta.com/api/v1/users?activate=true";
-        private const string groupPattern = "\"profile\":.[^{]*{\"name\":.[^\"]*\"(?<groups>.[^\"]*)";
-
-        protected override HttpRequestMessage CreateMessage(UserDTO user)
+        private const string userApiUrl = "https://dev-221155.okta.com/api/v1/users";
+      
+        protected override HttpRequestMessage CreateAddUserMessage(UserDTO user)
         {
 
             var requestBody = new
@@ -40,7 +39,7 @@ namespace FilmApi.AuthorityProviders
             return new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri(authorityUrl),
+                RequestUri = new Uri($"{userApiUrl}?activate=true"),
                 Headers =
                 {
                     { HttpRequestHeader.Authorization.ToString(), $"SSWS {oktaToken}"},
@@ -57,12 +56,12 @@ namespace FilmApi.AuthorityProviders
             return id;
         }
 
-        public async Task<string[]> GetUserGroups(string userID) 
+        public override async Task<string[]> GetUserGroups(string userID) 
         {
             var message = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://dev-221155.okta.com/api/v1/users/{userID}/groups"),
+                RequestUri = new Uri($"{userApiUrl}/{userID}/groups"),
                 Headers =
                 {
                     { HttpRequestHeader.Authorization.ToString(), $"SSWS {oktaToken}"},
@@ -70,25 +69,14 @@ namespace FilmApi.AuthorityProviders
             };
             var response = await httpClient.SendAsync(message);
             var content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(content);
             var matches = Regex.Matches(content, "\"profile\":[^{]*{\"name\":[^\"]*\"(?<groups>.[^\"]*)");
             return matches.Select( match => match.Groups["groups"].Value ).ToArray();
         }
 
-        public async Task<bool> CheckIfAdministrator(string userID)
+        public override async Task<bool> CheckIfAdministrator(string userID)
         {
-            var message = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://dev-221155.okta.com/api/v1/users/{userID}/groups"),
-                Headers =
-                {
-                    { HttpRequestHeader.Authorization.ToString(), $"SSWS {oktaToken}"},
-                }
-            };
-            var response = await httpClient.SendAsync(message);
-            var content = await response.Content.ReadAsStringAsync();
-            return content.Contains("Administrators");
+            var groups = await GetUserGroups(userID);
+            return groups.Contains("Administrators");
         }
     }
 }

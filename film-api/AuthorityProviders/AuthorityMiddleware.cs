@@ -11,7 +11,7 @@ namespace FilmApi.AuthorityProviders
         protected HttpClient httpClient = new HttpClient();
         public async Task<string> AddUser(UserDTO user) 
         {
-            var message = CreateMessage(user);
+            var message = CreateAddUserMessage(user);
             var response = await httpClient.SendAsync(message);
             var responseBody = await HandleResponse(response);
             var id = GetUserID(responseBody);
@@ -30,9 +30,11 @@ namespace FilmApi.AuthorityProviders
                 throw new ArgumentException(content);
             }
         }
-        protected abstract HttpRequestMessage CreateMessage(UserDTO user);
+        protected abstract HttpRequestMessage CreateAddUserMessage(UserDTO user);
 
         protected abstract string GetUserID(string response);
+        public abstract Task<string[]> GetUserGroups(string userID);
+        public abstract Task<bool> CheckIfAdministrator(string userID);
 
     }
 }

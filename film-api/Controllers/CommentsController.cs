@@ -87,16 +87,11 @@ namespace FilmApi.Controllers
         public async Task<ActionResult<CommentDTO>> PostComment([FromBody] CommentDTO comment)
         {
             var user = User.FindFirstValue("uid");
-            var newComment = new Comment
-            {
-                Content = comment.Content,
-                PublicationDate = DateTime.Now,
-                UserID = user,
-                FilmID = comment.FilmID
-            };
+            var author = await _context.Users.FindAsync(user);
+            var newComment = new Comment(comment) { UserID = user };
             _context.Comments.Add(newComment);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetComment", new { id = newComment.CommentID }, new CommentDTO(newComment));
+            return CreatedAtAction("GetComment", new { id = newComment.CommentID }, new CommentDTO(newComment) { Author = $"{author.FirstName} {author.LastName}"});
         }
 
         // DELETE: api/Comments/5

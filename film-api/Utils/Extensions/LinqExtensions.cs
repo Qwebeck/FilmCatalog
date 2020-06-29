@@ -29,7 +29,7 @@ namespace FilmApi.Utils
             var propAccess = GetOrderExpression(typeof(T), propInfo);
             var method = typeof(Enumerable).GetMethods().FirstOrDefault(m => m.Name == "OrderBy" && m.GetParameters().Length == 2);
             var genericMethod = method.MakeGenericMethod(typeof(T), propInfo.PropertyType);
-            return (IEnumerable<T>)genericMethod.Invoke(null, new object[] { query, propAccess.Compile() });
+            return (IEnumerable<T>)genericMethod.Invoke(null, new object[] { query, propAccess.Compile() })!;
         }
 
         public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string name)
@@ -39,7 +39,7 @@ namespace FilmApi.Utils
 
             var method = typeof(Queryable).GetMethods().FirstOrDefault(m => m.Name == "OrderBy" && m.GetParameters().Length == 2);
             var genericMethod = method.MakeGenericMethod(typeof(T), propInfo.PropertyType);
-            return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, access });
+            return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, access })!;
         }
 
         public static IEnumerable<T> OrderBy<T> (this IEnumerable<T> query, string [] names) 

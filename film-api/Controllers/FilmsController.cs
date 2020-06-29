@@ -234,7 +234,7 @@ namespace FilmApi.Controllers
             if ( film.Images != null && film.Images.Length != 0 )
             {
                 var toAdd = film.Images
-                            .Select(image => new Image { FilmID = id, Data = image });
+                            .Select(image => new Image(id, image));
                 _context.Images.AddRange(toAdd);
                 await _context.SaveChangesAsync();                
             }
@@ -264,15 +264,7 @@ namespace FilmApi.Controllers
         public async Task<ActionResult<Film>> PostFilm([FromBody] FilmDTO content)
         {
             string userID = User.FindFirstValue("uid");
-            var film = new Film 
-            {
-            Title=content.Title, 
-            Description=content.Description,
-            Genre=content.Genre, 
-            Director=content.Director, 
-            UserID=userID
-            };
-            
+            var film = new Film(content) { UserID = userID }; 
             if (FilmExists(film))
                  return BadRequest("FIlm Already exists");
             _context.Films.Add(film);
@@ -281,11 +273,7 @@ namespace FilmApi.Controllers
             if(content.Images != null && content.Images.Length != 0) 
             {
                 var newImages =  content.Images
-                                 .Select(image => new Image
-                                        {
-                                            FilmID = film.FilmID,
-                                            Data = image
-                                        });
+                                 .Select(image => new Image(film.FilmID, image));
                 _context.Images.AddRange(newImages);
                 await _context.SaveChangesAsync();
             }

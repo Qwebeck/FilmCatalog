@@ -74,7 +74,7 @@ export class FilmService {
    * @param film 
    */
   assignImage(film: Film): Observable<Film> {
-    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == film.filmID && this.lastFetchedFilm.images ) return of(this.lastFetchedFilm);
+    if ( this.lastFetchedFilm && this.lastFetchedFilm.filmID == film.filmID && this.lastFetchedFilm.images.length != 0 ) return of(this.lastFetchedFilm);
     const url = `${this.url}/${film.filmID}/image`;
     return this.http.get<FilmImage[]>(url).pipe(
       map(images=>{return {...film, 'images': images.map(im => im.data)}}),
