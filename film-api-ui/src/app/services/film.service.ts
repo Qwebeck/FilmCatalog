@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { of, Observable, throwError, from, forkJoin, pipe } from 'rxjs';
-import { catchError, retry, tap, switchMap, mergeMap, map } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { catchError, tap,  mergeMap, map } from 'rxjs/operators';
 import { Film } from '../interfaces/film';
-// import { OktaAuthService } from '@okta/okta-angular';
 import { AuthenticationService } from '../menu/authentication.service';
 import { FilmImage } from '../interfaces/image';
 
@@ -18,7 +17,7 @@ interface Mark  {
 export class FilmService {
   private readonly url: string = "https://localhost:5001/api/films"; 
   private lastFetchedFilm: Film;
-  private sampleFilm: Film = {filmID:0, title: '', addedBy: '', description: '', genre: ''}; 
+  private sampleFilm: Film = new Film(); 
   films: Film[] = []
 
   constructor(
@@ -115,6 +114,7 @@ export class FilmService {
    * @param film 
    */
   updateFilm(film: Film): Observable<Film> {
+    this.lastFetchedFilm = null;
     let obj = {
       Genre: film.genre,
       Images: film.images,
@@ -182,15 +182,8 @@ export class FilmService {
 
   private mapImages(images: FilmImage[], films: Film[]): Film[] {
     console.log("Images: ",images);
-    let sortedImages = images.sort((a,b) => a.filmID - b.filmID);
-    
-    let j = 0;
-    for (let i = 0; i < films.length; ++i) {
-      if (!films[i].images) films[i].images = [];  
-      if ( j < sortedImages.length && sortedImages[j].filmID == films[i].filmID ) {
-        films[i].images.push(sortedImages[j].data);
-          j += 1; 
-      }
+    for( let film of films ) {
+      film.images = images.filter(img => img.filmID == film.filmID).map(img => img.data);
     }
     return films;
   }

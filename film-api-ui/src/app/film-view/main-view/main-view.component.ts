@@ -18,7 +18,7 @@ export class MainViewComponent implements OnInit {
   ) { }
   
   loaded: boolean = false;
-  film: Film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
+  film: Film = new Film();
 
   ngOnInit(): void {
     this.getFilm();

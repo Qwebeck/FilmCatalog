@@ -29,7 +29,7 @@ export class FilmDescriptionComponent implements OnInit {
 
   ngOnInit(): void { 
     if ( !this.film ) {
-      this.film = { title: '', filmID: 0, addedBy:'', genre: '', description: ''};
+      this.film = new Film();
     }
   }
 

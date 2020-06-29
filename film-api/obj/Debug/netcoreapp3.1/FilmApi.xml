@@ -30,7 +30,7 @@
             <returns></returns>
             <response code="404">If comment wasn't found</response>
             <response code="400">If user is not authorized to access resource</response>
-            <response code="200">If comment was successfully created</response>  
+            <response code="200">If comment was successfully removed</response>  
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetFilms(System.Int32,System.Int32)">
             <summary>
@@ -38,11 +38,13 @@
             </summary>
             <param name="number">Number of films to fetch</param>
             <param name="offset">Number of films to skip</param>
+            <response code="200">Collection of finded films</response>   
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetGenres">
             <summary>
             Returns all existing genres
             </summary>
+            <response code="200">Collection of existing genres</response>  
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.FindByGenre(System.String[],System.String[],System.Int32,System.Int32)">
             <summary>
@@ -53,6 +55,8 @@
             <param name="number">Number of films to return</param>
             <param name="offset">Number of films to skip</param>
             <returns></returns>
+            <response code="200">Films with matching genres oredered by orderBy</response>  
+            <response code="404">If no films with such genres exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.FindByMark(System.Int32,System.Int32,System.String[],System.Int32,System.Int32)">
             <summary>
@@ -64,6 +68,8 @@
             <param name="number">Number of films to return</param>
             <param name="offset">Number of films to skip</param>
             <returns>Films which mark stays in bounds of lower and upper, orderedBy orderBy</returns>
+            <response code="200">Films with mark in specified boundd oredered by orderBy</response>  
+            <response code="404">If no films with mark in this bounds exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetByTitle(System.String,System.Int32,System.Int32)">
             <summary>
@@ -72,7 +78,9 @@
             <param name="title">String that should be in film title in order to return film</param>
             <param name="offset">Number of films to skip</param>
             <param name="number">Number of iflms to return</param>
-            <returns></returns>
+            <returns></returns>       
+            <response code="200">Films with matching subtitle oredered by orderBy</response>  
+            <response code="404">If no films that match given subtitle</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetFilm(System.Int64,System.Boolean)">
             <summary>
@@ -81,6 +89,8 @@
             <param name="id">id of film that should be described</param>
             <param name="includeComments">if True, appends comments to film description</param>
             <returns></returns>
+            <response code="200">Film with matching id</response>  
+            <response code="404">If no film with id exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetComments(System.Int64)">
             <summary>
@@ -88,6 +98,8 @@
             </summary>
             <param name="id">Id of film, for which comments should be found</param>
             <returns></returns>
+            <response code="200">Comments for films with given id</response>  
+            <response code="404">If no comments for given film exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetMarks(System.Int64)">
             <summary>
@@ -95,6 +107,8 @@
             </summary>
             <param name="filmId"></param>
             <returns></returns>
+            <response code="200">Marks for given film</response>  
+            <response code="404">If no marks for given film exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.GetImage(System.Int64)">
             <summary>
@@ -102,6 +116,8 @@
             </summary>
             <param name="id">id of film for which images should be fond</param>
             <returns></returns>
+            <response code="200">Images for film with id</response>  
+            <response code="404">If no images for film exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.PutFilm(System.Int64,FilmApi.Models.FilmDTO)">
             <summary>
@@ -110,6 +126,9 @@
             <param name="id">id of film to update</param>
             <param name="film">new film description</param>
             <returns></returns>
+            <response code="204">If film was successfully updated</response>  
+            <response code="400">If no film that could be updated</response>
+            <response code="404">If no marks for given film exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.PostFilm(FilmApi.Models.FilmDTO)">
             <summary>
@@ -117,6 +136,8 @@
             </summary>
             <param name="content">Description of film that should be added</param>
             <returns></returns>
+            <response code="201">If film was succesfully created</response>  
+            <response code="404">If film with similar title already exists</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.DeleteFilm(System.Int64)">
             <summary>
@@ -124,6 +145,9 @@
             </summary>
             <param name="id">Id of film to delete</param>
             <returns></returns>
+            <response code="200">If film was successfully deleted</response>  
+            <response code="400">If user was not authorized for action</response>
+            <respnse  code="404">If no film with given id was found</respnse>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.MarkFilm(System.Int64,FilmApi.Models.MarkDTO)">
             <summary>
@@ -132,6 +156,9 @@
             <param name="id">id of film to mark</param>
             <param name="newMark">new value of mark</param>
             <returns></returns>
+            <response code="201">If new mark was created</response>  
+            <response code="204">If mark was updated</response>
+            <response code="404">If film id in content hadn't match id in url</response>
         </member>
         <member name="M:FilmApi.Controllers.FilmsController.filterFields(System.String[])">
             <summary>
@@ -146,12 +173,15 @@
             </summary>
             <param name="user">Description of user that should be added</param>
             <returns></returns>
+             <response code="201">If user was added</response>  
+            <response code="500">If failure occured during obtaining id from authorizty</response>
         </member>
         <member name="M:FilmApi.Controllers.UsersController.GetUsers">
             <summary>
             Returns all existing users
             </summary>
             <returns></returns>
+            <response code="200">Collection of users</response>
         </member>
         <member name="M:FilmApi.Controllers.UsersController.GetUser(System.Int64)">
             <summary>
@@ -159,6 +189,8 @@
             </summary>
             <param name="id">Id of user for which description should be found</param>
             <returns></returns>
+            <response code="200">User with given id</response>
+            <response code="404">If user wasn't found</response>
         </member>
         <member name="M:FilmApi.Controllers.UsersController.PutUser(System.String,FilmApi.Models.UserDTO)">
             <summary>
@@ -167,6 +199,9 @@
             <param name="id">ID of user to update</param>
             <param name="user">New information about user</param>
             <returns></returns>
+            <response code="400">If user is not authorized for this action</response>
+            <response code="404">If no user with id exists</response>
+            <response code="204">If user was successfully updated</response>
         </member>
         <member name="M:FilmApi.Controllers.UsersController.GetUserReviews(System.String)">
             <summary>
@@ -174,6 +209,8 @@
             </summary>
             <param name="id">Id of review author</param>
             <returns></returns>
+            <response code="200">Collection of user reviews</response>
+            <response code="204">If no user with given id exists</response>
         </member>
         <member name="M:FilmApi.Controllers.UsersController.DeleteUser(System.String)">
             <summary>
@@ -181,6 +218,8 @@
             </summary>
             <param name="id">Id of user to remove</param>
             <returns></returns>
+            <response code="400">If user was not authorized for action</response>
+            <response code="200">If user was successffuly removed</response>
         </member>
         <member name="M:film_api.Controllers.ImagesController.GetImages(System.Int64[])">
             <summary>
@@ -188,6 +227,7 @@
             </summary>
             <param name="filmIDs">Ids for which images should be returned</param>
             <returns></returns>
+            <response code="200">Images for films with given ids</response>  
         </member>
     </members>
 </doc>

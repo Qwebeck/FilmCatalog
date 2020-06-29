@@ -10,7 +10,7 @@ import { FilmService } from '../../services/film.service';
 })
 export class EditorViewComponent implements OnInit {
 
-  film: Film = { title: '', addedBy: '', description: '', genre: '', filmID: 0};
+  film: Film = new Film();
   showPreview: boolean = true;
   editing: boolean = false;
   sending: boolean = false;
