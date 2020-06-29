@@ -11,6 +11,7 @@ using FilmApi.Models;
 namespace film_api.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class ImagesController : ControllerBase
     {
@@ -21,8 +22,14 @@ namespace film_api.Controllers
             _context = context;
         }
 
-        // GET: api/Images
+        /// <summary>
+        /// Returns images for films with given id
+        /// </summary>
+        /// <param name="filmIDs">Ids for which images should be returned</param>
+        /// <returns></returns>
+        /// <response code="200">Images for films with given ids</response>  
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Image>>> GetImages([FromQuery(Name = "filmid")] long[] filmIDs)
         {
 

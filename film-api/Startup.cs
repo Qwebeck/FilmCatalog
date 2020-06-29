@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
 using Okta.AspNetCore;
 using Microsoft.EntityFrameworkCore.Proxies;
+using System.Reflection;
+using System.IO;
+using System;
+
 namespace FilmApi
 {
     public class Startup
@@ -18,7 +22,6 @@ namespace FilmApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
@@ -52,18 +55,25 @@ namespace FilmApi
                     });
             });
             services.AddAuthorization();
-
             services.AddControllers();
+            services.AddSwaggerGen(c => {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
-        
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Film api");
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();

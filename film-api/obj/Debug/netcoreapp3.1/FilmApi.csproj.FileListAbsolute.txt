@@ -158,5 +158,12 @@ D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Okta.AspNetCore.dll
 D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Castle.Core.dll
 D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Proxies.dll
 D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\System.Json.dll
+D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\Projects\film-api\film-api\obj\Debug\netcoreapp3.1\FilmApi.csproj.CoreCompileInputs.cache
+D:\Projects\film-api\film-api\obj\Debug\netcoreapp3.1\FilmApi.MvcApplicationPartsAssemblyInfo.cs
 D:\Projects\film-api\film-api\obj\Debug\netcoreapp3.1\FilmApi.MvcApplicationPartsAssemblyInfo.cache
+D:\Projects\film-api\film-api\bin\Debug\netcoreapp3.1\FilmApi.xml
+D:\Projects\film-api\film-api\obj\Debug\netcoreapp3.1\FilmApi.xml

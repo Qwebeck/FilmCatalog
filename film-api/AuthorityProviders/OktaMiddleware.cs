@@ -7,14 +7,15 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmApi.AuthorityProviders
 {
-    public class OktaMiddleware: AuthorityMiddleware
+    public class OktaMiddleware : AuthorityMiddleware
     {
         private const string oktaToken = "00-DmEWPPkypwzLTK1bdHExPWe6oGSgtrDEEIZYPjQ";
         private const string userApiUrl = "https://dev-221155.okta.com/api/v1/users";
-      
+
         protected override HttpRequestMessage CreateAddUserMessage(UserDTO user)
         {
 
@@ -56,7 +57,7 @@ namespace FilmApi.AuthorityProviders
             return id;
         }
 
-        public override async Task<string[]> GetUserGroups(string userID) 
+        public override async Task<string[]> GetUserGroups(string userID)
         {
             var message = new HttpRequestMessage
             {
@@ -70,9 +71,8 @@ namespace FilmApi.AuthorityProviders
             var response = await httpClient.SendAsync(message);
             var content = await response.Content.ReadAsStringAsync();
             var matches = Regex.Matches(content, "\"profile\":[^{]*{\"name\":[^\"]*\"(?<groups>.[^\"]*)");
-            return matches.Select( match => match.Groups["groups"].Value ).ToArray();
+            return matches.Select(match => match.Groups["groups"].Value).ToArray();
         }
-
         public override async Task<bool> CheckIfAdministrator(string userID)
         {
             var groups = await GetUserGroups(userID);

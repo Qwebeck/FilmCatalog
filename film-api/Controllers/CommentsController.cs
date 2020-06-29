@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +7,12 @@ using FilmApi.DAL;
 using FilmApi.Models;
 using FilmApi.Utils;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+
 namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class CommentsController : ControllerBase
     {
@@ -22,32 +23,21 @@ namespace FilmApi.Controllers
             _context = context;
         }
 
-        // GET: api/Comments
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
-        {
-            return await _context.Comments.Select( c => new CommentDTO(c)).ToListAsync();
-        }
-
-        // GET: api/Comments/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CommentDTO>> GetComment(long id)
-        {
-            var comment = await _context.Comments.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return new CommentDTO(comment);
-        }
-
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Updates comment with given id
+        /// </summary>
+        /// <param name="id">ID of comment to update</param>
+        /// <param name="comment">New comment content</param>
+        /// <returns></returns>
+        /// <response code="404">If comment wasn't found</response>
+        /// <response code="400">If user is not authorized to access resource</response>
+        /// <response code="204">If comment was successfully updated</response>   
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<IActionResult> PutComment(long id, Comment comment)
+        public async Task<IActionResult> PutComment(long id, [FromBody] CommentDTO comment)
         {
             if (id != comment.CommentID)
             {
@@ -58,8 +48,7 @@ namespace FilmApi.Controllers
             {
                 return BadRequest("User should be an author or administrator to edit this comment");
             }            
-            _context.Entry(comment).State = EntityState.Modified;
-
+            _context.Entry(new Comment(comment)).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -75,27 +64,38 @@ namespace FilmApi.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
-        // POST: api/Comments
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Adds new comment to film
+        /// </summary>
+        /// <param name="comment">Comment that should be added</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<CommentDTO>> PostComment([FromBody] CommentDTO comment)
         {
-            var user = User.FindFirstValue("uid");
-            var author = await _context.Users.FindAsync(user);
-            var newComment = new Comment(comment) { UserID = user };
+            var userID = User.FindFirstValue("uid");
+            var author = await _context.Users.FindAsync(userID);
+            var newComment = new Comment(comment) { UserID = userID };
             _context.Comments.Add(newComment);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetComment", new { id = newComment.CommentID }, new CommentDTO(newComment) { Author = $"{author.FirstName} {author.LastName}"});
         }
 
-        // DELETE: api/Comments/5
+        /// <summary>
+        /// Removes comment with given id
+        /// </summary>
+        /// <param name="id">Id of comment to remove</param>
+        /// <returns></returns>
+        /// <response code="404">If comment wasn't found</response>
+        /// <response code="400">If user is not authorized to access resource</response>
+        /// <response code="200">If comment was successfully removed</response>  
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize]
         public async Task<ActionResult<CommentDTO>> DeleteComment(long id)
         {
@@ -110,7 +110,6 @@ namespace FilmApi.Controllers
             }
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
-
             return new CommentDTO(comment);
         }
 

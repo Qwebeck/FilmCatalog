@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 using FIlmApi.DAL;
 
 namespace FilmApi
@@ -17,7 +16,7 @@ namespace FilmApi
             CreateDbIfNotExists(host);
             host.Run();
         }
-        private static void CreateDbIfNotExists(IHost host)
+        private  static void CreateDbIfNotExists(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {

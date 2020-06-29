@@ -12,14 +12,12 @@ namespace FilmApi.Models
         public string? UserID { get; set; }
         public virtual User? Author { get; set; }
         public virtual Film? CommentedFilm { get; set; }
-
         public Comment( string content, string userID, long filmID )
         {
             Content = content;
             UserID = userID;
             FilmID = filmID;
         }
-
         public Comment( CommentDTO commentDTO) 
         {
             Content = commentDTO.Content;

@@ -35,6 +35,5 @@ namespace FilmApi.AuthorityProviders
         protected abstract string GetUserID(string response);
         public abstract Task<string[]> GetUserGroups(string userID);
         public abstract Task<bool> CheckIfAdministrator(string userID);
-
     }
 }

@@ -8,7 +8,6 @@ namespace FilmApi.Models
         public long FilmID { get; set; }
         public string? Author { get; set; }
         public DateTime? PublicationDate { get; set; }
-
         public CommentDTO(Comment c)
         {
             CommentID = c.CommentID;
@@ -17,7 +16,6 @@ namespace FilmApi.Models
             PublicationDate = c.PublicationDate;
             FilmID = c.FilmID;
         }
-
         public CommentDTO() { }
     }
 }

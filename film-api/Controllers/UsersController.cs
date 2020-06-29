@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,31 +6,34 @@ using Microsoft.EntityFrameworkCore;
 using FilmApi.DAL;
 using FilmApi.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Text.Json;
-using FilmApi.Utils.JSONConverters;
 using FilmApi.AuthorityProviders;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly Context _context;
         private readonly OktaMiddleware oktaMiddleware = new OktaMiddleware();
-       
-        private JsonSerializerOptions converterOptions = new JsonSerializerOptions();
 
         public UsersController(Context context)
         {
             _context = context;
-            converterOptions.Converters.Add(new UserDTOConverter());
         }
-        // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Adds new user
+        /// </summary>
+        /// <param name="user">Description of user that should be added</param>
+        /// <returns></returns>
+        ///  <response code="201">If user was added</response>  
+        /// <response code="500">If failure occured during obtaining id from authorizty</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<User>> PostUser(UserDTO user)
         {
             if ( UserExists(user)) 
@@ -53,16 +55,29 @@ namespace FilmApi.Controllers
         }
 
 
-        // GET: api/Users
+        /// <summary>
+        /// Returns all existing users
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Collection of users</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             return await _context.Users.Select( u => new UserDTO(u) ).ToListAsync();
         }
 
 
-        // GET: api/Users/5
+        /// <summary>
+        /// Returns information about user with given id
+        /// </summary>
+        /// <param name="id">Id of user for which description should be found</param>
+        /// <returns></returns>
+        /// <response code="200">User with given id</response>
+        /// <response code="404">If user wasn't found</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser(long id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -75,11 +90,20 @@ namespace FilmApi.Controllers
             return new UserDTO(user);
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Updates information about user
+        /// </summary>
+        /// <param name="id">ID of user to update</param>
+        /// <param name="user">New information about user</param>
+        /// <returns></returns>
+        /// <response code="400">If user is not authorized for this action</response>
+        /// <response code="404">If no user with id exists</response>
+        /// <response code="204">If user was successfully updated</response>
         [HttpPut("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutUser(string id, UserDTO user)
         {
 
@@ -109,25 +133,38 @@ namespace FilmApi.Controllers
 
             return NoContent();
         }
-
+        /// <summary>
+        /// Returns film reviews authored by user
+        /// </summary>
+        /// <param name="id">Id of review author</param>
+        /// <returns></returns>
+        /// <response code="200">Collection of user reviews</response>
+        /// <response code="204">If no user with given id exists</response>
         [HttpGet("{id}/reviews")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<FilmDTO>>> GetUserReviews(string id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
-
-            //_context.Entry(user).Collection(u => u.AuthoredReviews).Load();
             var reviews = await Task.FromResult(user
                                                 .AuthoredReviews
                                                 .Select(r => new FilmDTO(r))
                                                 .ToList());
             return reviews;
         }
-
-        // DELETE: api/Users/5
+        /// <summary>
+        /// Deletes user with given id
+        /// </summary>
+        /// <param name="id">Id of user to remove</param>
+        /// <returns></returns>
+        /// <response code="400">If user was not authorized for action</response>
+        /// <response code="200">If user was successffuly removed</response>
         [HttpDelete("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<UserDTO>> DeleteUser(string id)
         {
             var user = await _context.Users.FindAsync(id);

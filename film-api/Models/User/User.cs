@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FilmApi.Utils;
-using FilmApi.Utils.Attributes;
 namespace FilmApi.Models
 {
     public class User: IHaveUserID
