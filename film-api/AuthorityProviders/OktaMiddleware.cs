@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace FilmApi.AuthorityProviders
 {
@@ -13,6 +14,7 @@ namespace FilmApi.AuthorityProviders
     {
         private const string oktaToken = "00-DmEWPPkypwzLTK1bdHExPWe6oGSgtrDEEIZYPjQ";
         private const string authorityUrl = "https://dev-221155.okta.com/api/v1/users?activate=true";
+        private const string groupPattern = "\"profile\":.[^{]*{\"name\":.[^\"]*\"(?<groups>.[^\"]*)";
 
         protected override HttpRequestMessage CreateMessage(UserDTO user)
         {
@@ -55,6 +57,23 @@ namespace FilmApi.AuthorityProviders
             return id;
         }
 
+        public async Task<string[]> GetUserGroups(string userID) 
+        {
+            var message = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://dev-221155.okta.com/api/v1/users/{userID}/groups"),
+                Headers =
+                {
+                    { HttpRequestHeader.Authorization.ToString(), $"SSWS {oktaToken}"},
+                }
+            };
+            var response = await httpClient.SendAsync(message);
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+            var matches = Regex.Matches(content, "\"profile\":[^{]*{\"name\":[^\"]*\"(?<groups>.[^\"]*)");
+            return matches.Select( match => match.Groups["groups"].Value ).ToArray();
+        }
 
         public async Task<bool> CheckIfAdministrator(string userID)
         {

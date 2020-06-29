@@ -230,23 +230,13 @@ namespace FilmApi.Controllers
                                         .Where( im => im.FilmID == filmInDatabse.FilmID )
                                         .ToListAsync();
             _context.Images.RemoveRange(imagesForFilm);
+            await _context.SaveChangesAsync();
             if ( film.Images != null && film.Images.Length != 0 )
             {
-                foreach( var image in film.Images ) 
-                {
-                    _context.Images.Add(new Image{ FilmID = id, Data = image});
-                }
-                await _context.SaveChangesAsync();
-                // if ( imageInDatabse != null ) 
-                // {
-                //     imageInDatabse.Data = film.Image;
-                //     _context.Entry(imageInDatabse).State = EntityState.Modified;
-                // }
-                // else
-                // {
-                //     _context.Images.Add(new Image{ FilmID = id, Data = film.Image});
-                // }
-                
+                var toAdd = film.Images
+                            .Select(image => new Image { FilmID = id, Data = image });
+                _context.Images.AddRange(toAdd);
+                await _context.SaveChangesAsync();                
             }
 
             filmInDatabse.Title = film.Title;

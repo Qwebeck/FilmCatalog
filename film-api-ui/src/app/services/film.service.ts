@@ -117,7 +117,7 @@ export class FilmService {
   updateFilm(film: Film): Observable<Film> {
     let obj = {
       Genre: film.genre,
-      Image: film.images,
+      Images: film.images,
       Title: film.title,
       Description: film.description,
     };
