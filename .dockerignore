@@ -1,0 +1,4 @@
+film-api\bin\
+film-api\obj\
+.git\
+film-api-ui\node_modules\

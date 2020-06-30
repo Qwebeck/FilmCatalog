@@ -38,6 +38,7 @@ namespace FilmApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("https://localhost:5001/");
                 });
     }
 }

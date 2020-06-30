@@ -1,4 +1,5 @@
-Data/
-node_modules/
-.vscode/
-bin/
+film-api-ui\node_modules\
+.vscode\
+film-api\.vs\
+film-api\bin\
+film-api\obj\

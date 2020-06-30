@@ -28,6 +28,7 @@ namespace FilmApi
                    options
                    .UseLazyLoadingProxies()
                    .UseSqlServer(Configuration.GetConnectionString("Context")));
+	    
 
             services.AddAuthentication(options =>
             {
