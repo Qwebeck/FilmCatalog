@@ -368,7 +368,7 @@ namespace FilmApi.Controllers
                     FilmID = newMark.FilmID        
                 };
                 _context.Marks.Add(mark);
-                response = CreatedAtAction("MarkFilm", mark);
+                response = CreatedAtAction("MarkFilm", new MarkDTO(mark));
             }
             else 
             {
@@ -378,6 +378,29 @@ namespace FilmApi.Controllers
             }
             await _context.SaveChangesAsync();
             return response;
+        }
+
+        /// <summary>
+        /// Gets average mark for film with id
+        /// </summary>
+        /// <param name="id">id of film to for which mark should be found</param>
+        /// <returns></returns>
+        /// <response code="200">Average mark</response>  
+        /// <response code="404">If film with given id doesn't exists</response>
+        [HttpGet("{id}/averageMark")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<float>> GetAverageMark(long id)
+        {
+            var film = await _context.Films.FindAsync(id);
+            if ( film == null )
+            {
+                return NotFound("Film with given id wasn't found");
+            }
+            return film.Marks.Count > 0 
+                   ? film.Marks.Average( m => m.MarkValue )
+                   : 0;
+
         }
         private bool FilmExists(Film film)
         {

@@ -35,8 +35,8 @@ export class FilmDescriptionComponent implements OnInit {
 
   vote(mark: 0 | 1): void {
     this.filmService.markFilm(this.film.filmID, mark).subscribe(
-      _ => this.filmService.getFilm(this.film.filmID).subscribe(
-        f => this.film = f
+      _ => this.filmService.getMark(this.film).subscribe(
+        mark => this.film.averageMark = mark
       )
     );
   }

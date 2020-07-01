@@ -58,6 +58,16 @@ export class FilmService {
   }
 
   /**
+   * Get mark for film given as an agrument
+   * @param films 
+   */
+  getMark(film: Film): Observable<number> {
+    const url = `${this.url}/${film.filmID}/averageMark`;
+    return this.http.get<number>(url).pipe(
+      catchError(this.handleError<number>('getMark', 0))
+    )
+  }
+  /**
    * Fetches and assign images for given films
    * @param films films for which images should be fetched
    */
@@ -97,14 +107,8 @@ export class FilmService {
    * @param film film, that should be saved
    */
   saveFilm(film: Film): Observable<Film> {
-    let obj = {
-      Genre: film.genre,
-      Images: film.images,
-      Title: film.title,
-      Description: film.description,
-    };
     const headers = { Authorization: this.auth.accessToken };
-    return this.http.post<Film>(this.url, obj, {headers: headers}).pipe(
+    return this.http.post<Film>(this.url, film, {headers: headers}).pipe(
             tap((_) => console.log("Saved: ", film)),
             catchError(this.handleError<Film>('saveFilm', {...this.sampleFilm})))
   }
@@ -115,15 +119,9 @@ export class FilmService {
    */
   updateFilm(film: Film): Observable<Film> {
     this.lastFetchedFilm = null;
-    let obj = {
-      Genre: film.genre,
-      Images: film.images,
-      Title: film.title,
-      Description: film.description,
-    };
     const url = `${this.url}/${film.filmID}`;
     const headers = { Authorization: this.auth.accessToken };
-    return this.http.put<Film>(url, obj, {headers: headers}).pipe(
+    return this.http.put<Film>(url, film, {headers: headers}).pipe(
           tap((_) => console.log("Updated: ", film)),
           catchError(this.handleError<Film>('updateFilm',{...this.sampleFilm}))
           )
@@ -166,6 +164,7 @@ export class FilmService {
   }
 
   markFilm(filmID: number, mark: 0 | 1): Observable<Mark> {
+    this.lastFetchedFilm = null;
     const url = `${this.url}/${filmID}/marks`;
     let filmMark: Mark = {
       Mark: mark,
