@@ -135,7 +135,8 @@ export class FilmService {
   deleteFilm(film: Film): Observable<Film> {
     const id = film.filmID;
     const delUrl = `${this.url}/${id}`; 
-    return this.http.delete<Film>(delUrl).pipe(
+    const headers = { Authorization: this.auth.accessToken };
+    return this.http.delete<Film>(delUrl, {headers: headers}).pipe(
       catchError(this.handleError<Film>('deleteFilm'))
     )
   }
@@ -197,7 +198,8 @@ export class FilmService {
 
   private handleError<T>(operation: string, result?: T) {
     return (err: any): Observable<T> => {
-      console.error(`Operation ${operation} failed with error: ${err}`);
+      console.log(`Operation ${operation} failed with error: `);
+      console.log(err);
       return of(result as T);
     }
 

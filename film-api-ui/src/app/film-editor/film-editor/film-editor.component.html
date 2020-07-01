@@ -26,17 +26,19 @@
                     <mat-option *ngFor="let genre of genres | async" value="{{genre}}">{{ genre }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="selectGenre==='other'" appearance="standard">
-                <input matInput placeholder="Genre" [(ngModel)]="inputGenre">
-                <mat-hint>Genre</mat-hint>
-            </mat-form-field>
+           
         </mat-grid-tile>
     
         <mat-grid-tile>
             <button mat-stroked-button color="basic"><label for="image">Choose Image</label></button>
             <input #file style="display:none;" id="image" type="file" multiple accept='image/*' (change)="upload(file.files)"/>
         </mat-grid-tile>
-        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile *ngIf="selectGenre==='other'">
+            <mat-form-field appearance="standard">
+                <input matInput placeholder="Genre" [(ngModel)]="inputGenre">
+                <mat-hint>Genre</mat-hint>
+            </mat-form-field>
+        </mat-grid-tile>
 </mat-grid-list>
  
 <div *ngIf="uploaded_images.length!=0" class="uploaded_images">

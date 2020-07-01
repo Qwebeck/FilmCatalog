@@ -66,14 +66,37 @@ namespace FilmApi.Controllers
             }
             return NoContent();
         }
+        
+        /// <summary>
+        /// Returns the commment with given id
+        /// </summary>
+        /// <param name="id">ID of comment to update</param>
+        /// <returns></returns>
+        /// <response code="404">If comment wasn't found</response>
+        /// <response code="204">If comment was successfully updated</response>   
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<CommentDTO>> GetComment(long id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            return new CommentDTO(comment);
+        }
 
         /// <summary>
         /// Adds new comment to film
         /// </summary>
         /// <param name="comment">Comment that should be added</param>
         /// <returns></returns>
+        /// <response code="204">If comment was successfully created</response>   
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<CommentDTO>> PostComment([FromBody] CommentDTO comment)
         {
             var userID = User.FindFirstValue("uid");

@@ -3,3 +3,4 @@ node_modules/
 .vscode/
 film-api/bin/
 film-api/obj
+.vs/

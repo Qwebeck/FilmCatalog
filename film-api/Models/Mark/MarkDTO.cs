@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FilmApi.Models
 {
     public class MarkDTO
@@ -14,7 +10,14 @@ namespace FilmApi.Models
         public MarkDTO(Mark mark)
         {
             Mark = mark.MarkValue;
-            FilmTitle = mark.MarkedFilm.Title;
+            try
+            {
+                FilmTitle = mark.MarkedFilm.Title;
+            }
+            catch ( InvalidOperationException )
+            {
+                FilmTitle = "";
+            }
             AuthoredBy = $"{mark.Author?.FirstName ?? "Unknown"} {mark.Author?.LastName ?? "user"}";
             FilmID = mark.FilmID;
         }

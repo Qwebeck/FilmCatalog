@@ -25,7 +25,7 @@ namespace FIlmApi.DAL
                 return;
             var films = new Film[]
             {
-                new Film( "Terminator","Very good film", "1", "Action"),
+                new Film("Terminator","Very good film", "1", "Action"),
                 new Film("Deep in the dark","Very good film", "2", "Horror"),
                 new Film("Once in Hollywood","I think it is great", "1", "Comedy"),
                 new Film("Django","Very good film", "1", "Western"),

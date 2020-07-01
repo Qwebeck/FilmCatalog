@@ -52,7 +52,7 @@ export class MenuComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.signupManager.signup(result)
-          .subscribe( result => console.log('here'));
+          .subscribe();
     });
   }
 }
